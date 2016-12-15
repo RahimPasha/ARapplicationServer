@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Web;
 using System.Xml;
 using System.Net;
-using System.Net.Http;
-using System.Collections;
 using System.Collections.Specialized;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Configuration;
 namespace ARApplicationServer
 {
@@ -21,7 +14,7 @@ namespace ARApplicationServer
         public static string Registered;
         public static string Identifier;
 
-        public static void Register(string serverConfigFile)
+        public static string Register(string serverConfigFile)
         {
             string incomingDatabase;
             string outgoingDatabase;
@@ -36,15 +29,29 @@ namespace ARApplicationServer
             TargetsFolder = xDoc.SelectSingleNode("Server/Targets/TargetsFolder").InnerText;
             incomingDatabase = xDoc.SelectSingleNode("Server/Targets/Incoming").InnerText;
             outgoingDatabase = xDoc.SelectSingleNode("Server/Targets/Outgoing").InnerText;
-
+            string Response = "";
+            int ID = -1;
             NameValueCollection queryString = new NameValueCollection { { "server", ServerName }, { "id", ServerID } };
             using (WebClient request = new WebClient())
             {
-                TargetHubAddress = TargetHubAddress+"/Server/Register";
-                request.QueryString.Add(queryString);
-                
-
+                string uriAdress = string.Format(TargetHubAddress + "/server/register?server={0}&id={1}", ServerName, ServerID);
+                Response = request.OpenRead(uriAdress).ToString();
+                if (Response.Contains("Identifire:"))
+                {
+                    Response = Response.Replace("Identifire:", "");
+                    int.TryParse(Response, out ID);
+                }
             }
+            if (ID > 0)
+            {
+                xDoc.SelectSingleNode("Server/Registered").InnerText = "True";
+                xDoc.SelectSingleNode("Server/Identifier").InnerText = ID.ToString();
+                xDoc.Save(Dfile.FullName);
+                return "Registration was successful";
+            }
+
+            return "Registration failed";
+        }
             /*Task<string> Registered = registerAsync();
             if(Registered.Result == "approved")
             {

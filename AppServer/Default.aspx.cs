@@ -1,15 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
 using System.Collections.Specialized;
-using System.Collections;
-using System.Configuration;
-using System.Data.SqlClient;
 using System.Xml;
-using System.Text;
 
 namespace ARApplicationServer
 {
@@ -110,7 +102,7 @@ namespace ARApplicationServer
                         HttpContext.Current.Response.ClearContent();
                         HttpContext.Current.Response.Flush();
                     }
-                } 
+                }
             }
         }             
     }
