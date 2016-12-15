@@ -3,55 +3,58 @@ using System.Xml;
 using System.Net;
 using System.Collections.Specialized;
 using System.Configuration;
+using ARApplicationServer.App_Code;
 namespace ARApplicationServer
 {
     public static class THhandler
     {
-        public static string TargetHubAddress = ConfigurationManager.AppSettings["HubAddress"].ToString();
-        public static string ServerName;
-        public static string ServerID;
-        private static string TargetsFolder;
-        public static string Registered;
-        public static string Identifier;
-
-        public static string Register(string serverConfigFile)
+        public static string Register()
         {
-            string incomingDatabase;
-            string outgoingDatabase;
-            System.IO.FileInfo Dfile = new System.IO.FileInfo(HttpContext.Current.Server.MapPath(serverConfigFile));
-            //string fileName = "ServerA\\Config.xml";
-            XmlDocument xDoc = new XmlDocument(); // reading XML documents
-            xDoc.Load(Dfile.FullName);
-            ServerName = xDoc.SelectSingleNode("Server/Name").InnerText;
-            ServerID = xDoc.SelectSingleNode("Server/ID").InnerText;
-            Registered = xDoc.SelectSingleNode("Server/Registered").InnerText;
-            Identifier = xDoc.SelectSingleNode("Server/Identifier").InnerText;
-            TargetsFolder = xDoc.SelectSingleNode("Server/Targets/TargetsFolder").InnerText;
-            incomingDatabase = xDoc.SelectSingleNode("Server/Targets/Incoming").InnerText;
-            outgoingDatabase = xDoc.SelectSingleNode("Server/Targets/Outgoing").InnerText;
+
             string Response = "";
             int ID = -1;
-            NameValueCollection queryString = new NameValueCollection { { "server", ServerName }, { "id", ServerID } };
+            NameValueCollection queryString = new NameValueCollection { { "server", Global.ServerName }, { "id", Global.ServerID } };
             using (WebClient request = new WebClient())
             {
-                string uriAdress = string.Format(TargetHubAddress + "/server/register?server={0}&id={1}", ServerName, ServerID);
-                Response = request.OpenRead(uriAdress).ToString();
+                string uriAdress = string.Format(Global.TargetHubAddress + "/server/register?server={0}&id={1}", Global.ServerName, Global.ServerID);
+                Response = request.DownloadString(uriAdress);
                 if (Response.Contains("Identifire:"))
                 {
                     Response = Response.Replace("Identifire:", "");
+                    Response = Response.Replace("\"", "");
                     int.TryParse(Response, out ID);
                 }
             }
             if (ID > 0)
             {
-                xDoc.SelectSingleNode("Server/Registered").InnerText = "True";
-                xDoc.SelectSingleNode("Server/Identifier").InnerText = ID.ToString();
-                xDoc.Save(Dfile.FullName);
+                Global.xDoc.SelectSingleNode("Server/Registered").InnerText = "True";
+                Global.xDoc.SelectSingleNode("Server/Identifier").InnerText = ID.ToString();
+                Global.xDoc.Save(Global.Dfile.FullName);
                 return "Registration was successful";
             }
 
-            return "Registration failed";
+            return "Registration failed" + "\n" + "Hub replied:" + Response;
         }
+
+        public static string Upload()
+        {
+            string RegisterationReply = "";
+            RegisterationReply = THhandler.Register();
+
+
+
+            return "Registration: " + RegisterationReply + "\n" + "Upload: Failed";
+        }
+
+
+
+
+
+
+
+
+
+
             /*Task<string> Registered = registerAsync();
             if(Registered.Result == "approved")
             {
