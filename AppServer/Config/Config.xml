@@ -1,0 +1,12 @@
+<Server>
+	<Name>ServerA</Name>
+	<ID>1234567</ID>
+	<Registered>False</Registered>
+	<Identifier></Identifier>
+	<Targets>
+		<TargetsFolder>Targets</TargetsFolder>
+		<Incoming>Targets/Incoming</Incoming>
+		<Outgoing>Targets/Outgoing</Outgoing>
+		<ChatFile>Targets/Chat</ChatFile>
+	</Targets>
+</Server>
