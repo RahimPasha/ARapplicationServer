@@ -3,6 +3,7 @@ using System.Web;
 using System.Collections.Specialized;
 using System.Xml;
 using ARApplicationServer.App_Code;
+using System.Configuration;
 
 namespace ARApplicationServer
 {
@@ -15,6 +16,9 @@ namespace ARApplicationServer
         {
             HttpRequest q = Request;
             NameValueCollection MyQueryString = q.QueryString;
+            Global.TargetHubAddress = ConfigurationManager.AppSettings["HubAddress"].ToString();
+            Global.serverConfigFile = "Config" + "/" + "Config.xml";
+            Global.Dfile = new System.IO.FileInfo(HttpContext.Current.Server.MapPath(Global.serverConfigFile));
             Global.xDoc.Load(Global.Dfile.FullName);
             Global.ServerName = Global.xDoc.SelectSingleNode("Server/Name").InnerText;
             Global.ServerID = Global.xDoc.SelectSingleNode("Server/ID").InnerText;
@@ -24,7 +28,8 @@ namespace ARApplicationServer
             Global.incomingDatabase = Global.xDoc.SelectSingleNode("Server/Targets/Incoming").InnerText;
             Global.outgoingDatabase = Global.xDoc.SelectSingleNode("Server/Targets/Outgoing").InnerText;
             Global.ChatFolder = Global.xDoc.SelectSingleNode("Server/Targets/ChatFile").InnerText;
-            Global.Dfile = new System.IO.FileInfo(HttpContext.Current.Server.MapPath(Global.serverConfigFile));
+            Global.Tags = Global.xDoc.GetElementsByTagName("Tags");
+            
 
             if (MyQueryString.HasKeys()) // On each target detection an empty request comes to the server from the client
             //may be in the future

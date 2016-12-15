@@ -5,6 +5,9 @@
   <Identifier>5</Identifier>
   <Targets>
     <TargetsFolder>Targets</TargetsFolder>
+	<Tags>
+		<Tag>Test</Tag>
+	</Tags>
     <Incoming>Targets/Incoming</Incoming>
     <Outgoing>Targets/Outgoing</Outgoing>
     <ChatFile>Targets/Chat</ChatFile>

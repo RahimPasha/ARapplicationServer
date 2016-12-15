@@ -22,6 +22,7 @@ namespace ARApplicationServer.App_Code
         public static string ChatFolder;
         public static string serverConfigFile = "Config" + "/" + "Config.xml";
         public static System.IO.FileInfo Dfile;
+        public static List<string> Tags = new List<string>();
         public static XmlDocument xDoc = new XmlDocument(); // reading XML documents
             
     }
