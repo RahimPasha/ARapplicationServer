@@ -1,13 +1,16 @@
 <Server>
   <Name>ServerA</Name>
-  <ID>1234577</ID>
+  <ID>1236577</ID>
   <Registered>True</Registered>
-  <Identifier>5</Identifier>
+  <Identifier>6</Identifier>
   <Targets>
     <TargetsFolder>Targets</TargetsFolder>
-	<Tags>
-		<Tag>Test</Tag>
-	</Tags>
+    <Name>Stone</Name>
+    <Tags>
+      <Tag>stone</Tag>
+      <Tag>park</Tag>
+      <Tag>sea</Tag>
+    </Tags>
     <Incoming>Targets/Incoming</Incoming>
     <Outgoing>Targets/Outgoing</Outgoing>
     <ChatFile>Targets/Chat</ChatFile>

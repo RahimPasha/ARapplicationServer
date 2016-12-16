@@ -1,9 +1,12 @@
-﻿using System.Web;
-using System.Xml;
-using System.Net;
+﻿using System.Net;
 using System.Collections.Specialized;
-using System.Configuration;
 using ARApplicationServer.App_Code;
+using System.Linq;
+using System.Xml.Linq;
+using System.Xml;
+using System.Text;
+using System.Web;
+
 namespace ARApplicationServer
 {
     public static class THhandler
@@ -39,20 +42,29 @@ namespace ARApplicationServer
         public static string Upload()
         {
             string RegisterationReply = "";
-            RegisterationReply = THhandler.Register();
-
+            RegisterationReply = Register();
+            using (WebClient client = new WebClient())
+            {
+                string uriAdress = string.Format(Global.TargetHubAddress + "/Target/Upload?Identifier={0}&ID={1}&TargetName={2}", Global.ServerID, Global.Identifier,Global.TargetName);
+                var request = new NameValueCollection();
+                request.Add("Identifier", Global.ServerID);
+                request.Add("ID", Global.Identifier);
+                request.Add("TargetName", Global.TargetName);
+                foreach (string s in Global.Tags)
+                {
+                    request.Add("Tags[]", s);
+                    uriAdress += "&Tags[]=" + s;
+                }
+                byte[] responsebytes;
+                //responsebytes = client.UploadValues(Global.TargetHubAddress + "/Target/Upload", "POST", request);
+                var Dfile = new System.IO.FileInfo(HttpContext.Current.Server.MapPath(Global.outgoingDatabase + "/" + "shared.xml"));
+                responsebytes = client.UploadFile(uriAdress, "POST", Dfile.FullName);
+                string responsebody = Encoding.UTF8.GetString(responsebytes);
+            }
 
 
             return "Registration: " + RegisterationReply + "\n" + "Upload: Failed";
         }
-
-
-
-
-
-
-
-
 
 
             /*Task<string> Registered = registerAsync();

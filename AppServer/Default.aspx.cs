@@ -4,6 +4,8 @@ using System.Collections.Specialized;
 using System.Xml;
 using ARApplicationServer.App_Code;
 using System.Configuration;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace ARApplicationServer
 {
@@ -28,8 +30,12 @@ namespace ARApplicationServer
             Global.incomingDatabase = Global.xDoc.SelectSingleNode("Server/Targets/Incoming").InnerText;
             Global.outgoingDatabase = Global.xDoc.SelectSingleNode("Server/Targets/Outgoing").InnerText;
             Global.ChatFolder = Global.xDoc.SelectSingleNode("Server/Targets/ChatFile").InnerText;
-            Global.Tags = Global.xDoc.GetElementsByTagName("Tags");
-            
+            //Global.Tags = Global.xDoc.GetElementsByTagName("tags").Cast<XmlNode>().Select(x => x.InnerText).ToList();
+            XmlNodeList temp1 = Global.xDoc.GetElementsByTagName("tags");
+            List<string> temp2 = temp1.Cast<XmlNode>().Select(x => x.InnerText).ToList<string>();
+
+            Global.TargetName = Global.xDoc.SelectSingleNode("Server/Targets/Name").InnerText;
+
 
             if (MyQueryString.HasKeys()) // On each target detection an empty request comes to the server from the client
             //may be in the future
@@ -60,7 +66,6 @@ namespace ARApplicationServer
                 else if (Parameter1.ToLower() == "upload")
                 {
                     HttpContext.Current.Response.ClearContent();
-                    HttpContext.Current.Response.Write(THhandler.Register());
                     HttpContext.Current.Response.Write("\n" + THhandler.Upload());
                     HttpContext.Current.Response.Flush();
                     //HttpContext.Current.Response.Close();
