@@ -33,37 +33,46 @@ namespace ARApplicationServer
                 Global.xDoc.SelectSingleNode("Server/Registered").InnerText = "True";
                 Global.xDoc.SelectSingleNode("Server/Identifier").InnerText = ID.ToString();
                 Global.xDoc.Save(Global.Dfile.FullName);
-                return "Registration was successful";
+                return "Registration was successful" + "<br />";
             }
 
-            return "Registration failed" + "\n" + "Hub replied:" + Response;
+            return "Registration: failed" + "<br />" + "Hub replied:" + Response + "<br />";
         }
 
         public static string Upload()
         {
             string RegisterationReply = "";
+            string UploadReplyxml = "";
+            string UploadReplydat = "";
             RegisterationReply = Register();
             using (WebClient client = new WebClient())
             {
-                string uriAdress = string.Format(Global.TargetHubAddress + "/Target/Upload?Identifier={0}&ID={1}&TargetName={2}", Global.ServerID, Global.Identifier,Global.TargetName);
-                var request = new NameValueCollection();
-                request.Add("Identifier", Global.ServerID);
-                request.Add("ID", Global.Identifier);
-                request.Add("TargetName", Global.TargetName);
+                string uriAdress = string.Format(Global.TargetHubAddress +
+                    "/Target/Upload?Identifier={0}&ID={1}&TargetName={2}",
+                    Global.ServerID, Global.Identifier, Global.OutgoingTargetName);
+
                 foreach (string s in Global.Tags)
-                {
-                    request.Add("Tags[]", s);
                     uriAdress += "&Tags[]=" + s;
-                }
-                byte[] responsebytes;
-                //responsebytes = client.UploadValues(Global.TargetHubAddress + "/Target/Upload", "POST", request);
-                var Dfile = new System.IO.FileInfo(HttpContext.Current.Server.MapPath(Global.outgoingDatabase + "/" + "shared.xml"));
-                responsebytes = client.UploadFile(uriAdress, "POST", Dfile.FullName);
-                string responsebody = Encoding.UTF8.GetString(responsebytes);
+
+                var Ufile = new System.IO.FileInfo(HttpContext.Current.Server.MapPath(Global.outgoingDatabase +
+                    "/" + "shared.xml"));
+                UploadReplyxml = Encoding.UTF8.GetString(client.UploadFile(uriAdress, "POST", Ufile.FullName));
             }
+            using (WebClient client = new WebClient())
+            {
+                string uriAdress = string.Format(Global.TargetHubAddress +
+                    "/Target/Upload?Identifier={0}&ID={1}&TargetName={2}",
+                    Global.ServerID, Global.Identifier, Global.OutgoingTargetName);
 
+                foreach (string s in Global.Tags)
+                    uriAdress += "&Tags[]=" + s;
 
-            return "Registration: " + RegisterationReply + "\n" + "Upload: Failed";
+                var Ufile = new System.IO.FileInfo(HttpContext.Current.Server.MapPath(Global.outgoingDatabase +
+                    "/" + "shared.dat"));
+                UploadReplydat = Encoding.UTF8.GetString(client.UploadFile(uriAdress, "POST", Ufile.FullName));
+            }
+            return "Registration: " + RegisterationReply + "<br />" + "Upload for xml: " + UploadReplyxml + "<br />" +
+                "<br />" + "Upload for dat: " + UploadReplydat + "<br />";
         }
 
 

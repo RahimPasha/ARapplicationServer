@@ -5,14 +5,19 @@
   <Identifier>6</Identifier>
   <Targets>
     <TargetsFolder>Targets</TargetsFolder>
-    <Name>Stone</Name>
     <Tags>
       <Tag>stone</Tag>
       <Tag>park</Tag>
       <Tag>sea</Tag>
     </Tags>
-    <Incoming>Targets/Incoming</Incoming>
-    <Outgoing>Targets/Outgoing</Outgoing>
+    <Incoming>
+		<Name>Chips</Name>
+		<Address>Targets/Incoming</Address>
+	</Incoming>
+    <Outgoing>
+		<Name>Stone</Name>
+		<Address>Targets/Outgoing</Address>
+	</Outgoing>
     <ChatFile>Targets/Chat</ChatFile>
   </Targets>
 </Server>

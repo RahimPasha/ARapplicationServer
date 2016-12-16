@@ -13,7 +13,8 @@ namespace ARApplicationServer.App_Code
 
         public static string TargetHubAddress = ConfigurationManager.AppSettings["HubAddress"].ToString();
         public static string ServerName;
-        public static string TargetName;
+        public static string IncomingTargetName;
+        public static string OutgoingTargetName;
         public static string ServerID;
         public static string TargetsFolder;
         public static string Registered;

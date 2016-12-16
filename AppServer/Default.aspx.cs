@@ -27,14 +27,13 @@ namespace ARApplicationServer
             Global.Registered = Global.xDoc.SelectSingleNode("Server/Registered").InnerText;
             Global.Identifier = Global.xDoc.SelectSingleNode("Server/Identifier").InnerText;
             Global.TargetsFolder = Global.xDoc.SelectSingleNode("Server/Targets/TargetsFolder").InnerText;
-            Global.incomingDatabase = Global.xDoc.SelectSingleNode("Server/Targets/Incoming").InnerText;
-            Global.outgoingDatabase = Global.xDoc.SelectSingleNode("Server/Targets/Outgoing").InnerText;
+            Global.incomingDatabase = Global.xDoc.SelectSingleNode("Server/Targets/Incoming/Address").InnerText;
+            Global.outgoingDatabase = Global.xDoc.SelectSingleNode("Server/Targets/Outgoing/Address").InnerText;
             Global.ChatFolder = Global.xDoc.SelectSingleNode("Server/Targets/ChatFile").InnerText;
-            //Global.Tags = Global.xDoc.GetElementsByTagName("tags").Cast<XmlNode>().Select(x => x.InnerText).ToList();
-            XmlNodeList temp1 = Global.xDoc.GetElementsByTagName("tags");
-            List<string> temp2 = temp1.Cast<XmlNode>().Select(x => x.InnerText).ToList<string>();
-
-            Global.TargetName = Global.xDoc.SelectSingleNode("Server/Targets/Name").InnerText;
+            Global.IncomingTargetName = Global.xDoc.SelectSingleNode("Server/Targets/Incoming/Name").InnerText;
+            Global.OutgoingTargetName = Global.xDoc.SelectSingleNode("Server/Targets/Outgoing/Name").InnerText;
+            Global.Tags = Global.xDoc.SelectNodes("Server/Targets/Tags/Tag").Cast<XmlNode>().
+                Select(x => x.InnerText).ToList<string>();
 
 
             if (MyQueryString.HasKeys()) // On each target detection an empty request comes to the server from the client
