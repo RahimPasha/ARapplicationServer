@@ -19,7 +19,8 @@ namespace ARApplicationServer
             NameValueCollection queryString = new NameValueCollection { { "server", Global.ServerName }, { "id", Global.ServerID } };
             using (WebClient request = new WebClient())
             {
-                string uriAdress = string.Format(Global.TargetHubAddress + "/server/register?server={0}&id={1}", Global.ServerName, Global.ServerID);
+                string uriAdress = string.Format(Global.TargetHubAddress +
+                    "/server/register?server={0}&id={1}", Global.ServerName, Global.ServerID);
                 Response = request.DownloadString(uriAdress);
                 if (Response.Contains("Identifire:"))
                 {
@@ -38,7 +39,6 @@ namespace ARApplicationServer
 
             return "Registration: failed" + "<br />" + "Hub replied:" + Response + "<br />";
         }
-
         public static string Upload()
         {
             string RegisterationReply = "";
