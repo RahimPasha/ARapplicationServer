@@ -32,8 +32,10 @@ namespace ARApplicationServer
             Global.ChatFolder = Global.xDoc.SelectSingleNode("Server/Targets/ChatFile").InnerText;
             Global.IncomingTargetName = Global.xDoc.SelectSingleNode("Server/Targets/Incoming/Name").InnerText;
             Global.OutgoingTargetName = Global.xDoc.SelectSingleNode("Server/Targets/Outgoing/Name").InnerText;
-            Global.Tags = Global.xDoc.SelectNodes("Server/Targets/Tags/Tag").Cast<XmlNode>().
-                Select(x => x.InnerText).ToList<string>();
+            Global.UploadingTags = Global.xDoc.SelectNodes("Server/Targets/Outgoing/Tags/Tag").Cast<XmlNode>().
+                Select(x => x.InnerText).ToList();
+            Global.DownloadingTags = Global.xDoc.SelectNodes("Server/Targets/Incoming/Tags/Tag").Cast<XmlNode>().
+                Select(x => x.InnerText).ToList();
 
 
             if (MyQueryString.HasKeys()) // On each target detection an empty request comes to the server from the client
@@ -66,6 +68,13 @@ namespace ARApplicationServer
                 {
                     HttpContext.Current.Response.ClearContent();
                     HttpContext.Current.Response.Write("\n" + THhandler.Upload());
+                    HttpContext.Current.Response.Flush();
+                    //HttpContext.Current.Response.Close();
+                }
+                else if (Parameter1.ToLower() == "download")
+                {
+                    HttpContext.Current.Response.ClearContent();
+                    HttpContext.Current.Response.Write("\n" + THhandler.Download());
                     HttpContext.Current.Response.Flush();
                     //HttpContext.Current.Response.Close();
                 }
