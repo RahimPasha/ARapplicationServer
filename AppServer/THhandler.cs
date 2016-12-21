@@ -7,6 +7,7 @@ using System.Xml;
 using System.Text;
 using System.Web;
 using System;
+using System.Collections.Generic;
 
 namespace ARApplicationServer
 {
@@ -78,84 +79,101 @@ namespace ARApplicationServer
         internal static string Download()
         {
             string RegisterationReply = "";
-            string UploadReplyxml = "";
-            string UploadReplydat = "";
+            string DownloadReplyxml = "";
+            string DownloadReplydat = "";
             string targetname = "Stone";
             RegisterationReply = Register();
+            List<string> targets = new List<string>();
+            GetTargets(targets);
             using (WebClient client = new WebClient())
             {
                 //client.QueryString.Add("file")
-                var Dowfile = new System.IO.FileInfo(HttpContext.Current.Server.MapPath(Global.incomingDatabase + "/" + targetname+".xml"));
+                var Dowfile = new System.IO.FileInfo(HttpContext.Current.Server.MapPath(Global.incomingDatabase + "/" + targetname + ".xml"));
                 string uriAdress = string.Format("{0}/Target/Download?Identifier={1}&ID={2}&TargetName={3}&format={4}",
                     Global.TargetHubAddress, Global.ServerID, Global.Identifier, targetname, "xml");
                 client.DownloadFile(uriAdress, Dowfile.FullName);
-
                 Dowfile = new System.IO.FileInfo(HttpContext.Current.Server.MapPath(Global.incomingDatabase + "/" + targetname + ".dat"));
                 uriAdress = string.Format("{0}/Target/Download?Identifier={1}&ID={2}&TargetName={3}&format={4}", Global.TargetHubAddress,
                     Global.ServerID, Global.Identifier, targetname, "dat");
                 client.DownloadFile(uriAdress, Dowfile.FullName);
             }
 
-            return "Registration: " + RegisterationReply + "<br />" + "Upload for xml: " + UploadReplyxml + "<br />" +
-                "<br />" + "Upload for dat: " + UploadReplydat + "<br />";
+            return "Registration: " + RegisterationReply + "<br />" + "Upload for xml: " + DownloadReplyxml + "<br />" +
+                "<br />" + "Upload for dat: " + DownloadReplydat + "<br />";
         }
 
-
-        /*Task<string> Registered = registerAsync();
-        if(Registered.Result == "approved")
+        private static void GetTargets(List<string> targets)
         {
-            WebClient client = new WebClient();
-            client.DownloadFile("http://localhost:7204/default.aspx?file=second.xml","second.xml");
-            client.DownloadFile("http://localhost:7204/default.aspx?file=second.dat", "second.dat");
-        }
-        */
-        /*
-        #region Uploading This server's Database to TH
-        //TODO: Try and catch is neccessary due to file not found error and other errors
 
-        NameValueCollection queryString = new NameValueCollection { { "request", "register" }, { "server", ServerName }, { "ID", ServerID } };
-        Dfile = new System.IO.FileInfo(HttpContext.Current.Server.MapPath(outgoingDatabase + "/" + "shared.xml"));
-        HttpContext.Current.Response.Write(Dfile.FullName);
-
-        using (WebClient request = new WebClient())
-        {
-            request.QueryString.Add(queryString);
-            request.UploadFile(TargetHubAddress, Dfile.FullName);
+            using (WebClient client = new WebClient())
+            {
+                string uriAdress = string.Format(Global.TargetHubAddress + "/Target/GetTargets?Identifier={0}&ID={1}",
+                    Global.ServerID, Global.Identifier);
+                foreach (string s in Global.DownloadingTags)
+                    uriAdress += "&Tags[]=" + s;
+                byte[] response = client.DownloadData(uriAdress);
+                //targets = response.ToList();
+                string ss = Encoding.Default.GetString(response);
+            }
         }
-        Dfile = new System.IO.FileInfo(HttpContext.Current.Server.MapPath(outgoingDatabase + "/" + "shared.dat"));
-        using (WebClient request = new WebClient())
-        {
-            request.QueryString.Add(queryString);
-            request.UploadFile(TargetHubAddress, Dfile.FullName);
-        }
-        #endregion
 
-        #region Downloading Database of other servers from TH
-        //TODO: try and catch is needed
-        using (WebClient client = new WebClient())
-        {
-            //client.QueryString.Add("file")
-            Dfile = new System.IO.FileInfo(HttpContext.Current.Server.MapPath(incomingDatabase + "/" + "shared.xml"));
-            HttpContext.Current.Response.Write(TargetHubAddress + "?file=" + Dfile.Name + "&server=" + ServerName + "&ID=" + ServerID + "--" + Dfile.FullName);
-            client.DownloadFile(TargetHubAddress + "?file=" + Dfile.FullName + "&server=" + ServerName + "&ID=" + ServerID, Dfile.FullName);
-            Dfile = new System.IO.FileInfo(HttpContext.Current.Server.MapPath(incomingDatabase + "/" + "shared.dat"));
-            client.DownloadFile(TargetHubAddress + "?file=" + Dfile.FullName + "&server=" + ServerName + "&ID=" + ServerID, Dfile.FullName);
-        }
-        #endregion
 
-    }
-        */
-        /* private static async Task<string> registerAsync()
-         {
-             using (var client = new HttpClient())
+
+            /*Task<string> Registered = registerAsync();
+            if(Registered.Result == "approved")
+            {
+                WebClient client = new WebClient();
+                client.DownloadFile("http://localhost:7204/default.aspx?file=second.xml","second.xml");
+                client.DownloadFile("http://localhost:7204/default.aspx?file=second.dat", "second.dat");
+            }
+            */
+            /*
+            #region Uploading This server's Database to TH
+            //TODO: Try and catch is neccessary due to file not found error and other errors
+
+            NameValueCollection queryString = new NameValueCollection { { "request", "register" }, { "server", ServerName }, { "ID", ServerID } };
+            Dfile = new System.IO.FileInfo(HttpContext.Current.Server.MapPath(outgoingDatabase + "/" + "shared.xml"));
+            HttpContext.Current.Response.Write(Dfile.FullName);
+
+            using (WebClient request = new WebClient())
+            {
+                request.QueryString.Add(queryString);
+                request.UploadFile(TargetHubAddress, Dfile.FullName);
+            }
+            Dfile = new System.IO.FileInfo(HttpContext.Current.Server.MapPath(outgoingDatabase + "/" + "shared.dat"));
+            using (WebClient request = new WebClient())
+            {
+                request.QueryString.Add(queryString);
+                request.UploadFile(TargetHubAddress, Dfile.FullName);
+            }
+            #endregion
+
+            #region Downloading Database of other servers from TH
+            //TODO: try and catch is needed
+            using (WebClient client = new WebClient())
+            {
+                //client.QueryString.Add("file")
+                Dfile = new System.IO.FileInfo(HttpContext.Current.Server.MapPath(incomingDatabase + "/" + "shared.xml"));
+                HttpContext.Current.Response.Write(TargetHubAddress + "?file=" + Dfile.Name + "&server=" + ServerName + "&ID=" + ServerID + "--" + Dfile.FullName);
+                client.DownloadFile(TargetHubAddress + "?file=" + Dfile.FullName + "&server=" + ServerName + "&ID=" + ServerID, Dfile.FullName);
+                Dfile = new System.IO.FileInfo(HttpContext.Current.Server.MapPath(incomingDatabase + "/" + "shared.dat"));
+                client.DownloadFile(TargetHubAddress + "?file=" + Dfile.FullName + "&server=" + ServerName + "&ID=" + ServerID, Dfile.FullName);
+            }
+            #endregion
+
+        }
+            */
+            /* private static async Task<string> registerAsync()
              {
+                 using (var client = new HttpClient())
+                 {
 
-                 var values = new Dictionary<string, string> { { "ID", ServerID }, { "Name", ServerName } };
-                 var content = new FormUrlEncodedContent(values);
-                 var response = await client.PostAsync(TargetHubAddress, content);
-                 var responseString = await response.Content.ReadAsStringAsync();
-                 return response.Content.ToString().ToLower();
-             }
-         }*/
-    }
+                     var values = new Dictionary<string, string> { { "ID", ServerID }, { "Name", ServerName } };
+                     var content = new FormUrlEncodedContent(values);
+                     var response = await client.PostAsync(TargetHubAddress, content);
+                     var responseString = await response.Content.ReadAsStringAsync();
+                     return response.Content.ToString().ToLower();
+                 }
+             }*/
+        }
 }
