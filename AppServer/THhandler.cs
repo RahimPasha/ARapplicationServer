@@ -3,6 +3,7 @@ using System.Collections.Specialized;
 using ARApplicationServer.App_Code;
 using System.Text;
 using System.Web;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace ARApplicationServer
@@ -81,6 +82,14 @@ namespace ARApplicationServer
             RegisterationReply = Register();
             List<string> targets = new List<string>();
             GetTargets(targets);
+            if(targets.Count==0)
+            {
+                return "Get Targets: There is no targets witrh specified tags";
+            }
+            else
+            {
+                targetname = targets[0];
+            }
             using (WebClient client = new WebClient())
             {
                 //client.QueryString.Add("file")
@@ -88,14 +97,16 @@ namespace ARApplicationServer
                 string uriAdress = string.Format("{0}/Target/Download?Identifier={1}&ID={2}&TargetName={3}&format={4}",
                     Global.TargetHubAddress, Global.ServerID, Global.Identifier, targetname, "xml");
                 client.DownloadFile(uriAdress, Dowfile.FullName);
+                DownloadReplyxml = "OK";
                 Dowfile = new System.IO.FileInfo(HttpContext.Current.Server.MapPath(Global.incomingDatabase + "/" + targetname + ".dat"));
                 uriAdress = string.Format("{0}/Target/Download?Identifier={1}&ID={2}&TargetName={3}&format={4}", Global.TargetHubAddress,
                     Global.ServerID, Global.Identifier, targetname, "dat");
                 client.DownloadFile(uriAdress, Dowfile.FullName);
+                DownloadReplydat = "OK";
             }
 
-            return "Registration: " + RegisterationReply + "<br />" + "Upload for xml: " + DownloadReplyxml + "<br />" +
-                "<br />" + "Upload for dat: " + DownloadReplydat + "<br />";
+            return "Registration: " + RegisterationReply + "<br />" + "Download for xml: " + DownloadReplyxml + "<br />" +
+                "<br />" + "Download for dat: " + DownloadReplydat + "<br />";
         }
 
         private static void GetTargets(List<string> targets)
@@ -110,6 +121,12 @@ namespace ARApplicationServer
                 byte[] response = client.DownloadData(uriAdress);
                 //targets = response.ToList();
                 string ss = Encoding.Default.GetString(response);
+                ss = ss.Replace("\"", "").Replace("[", "").Replace("]", "");
+                foreach(string s in ss.Split(','))
+                {
+                    targets.Add(s);
+                }
+                //targets = ss.Split(',').ToList<string>();
             }
         }
 
