@@ -1,12 +1,8 @@
 ﻿using System.Net;
 using System.Collections.Specialized;
 using ARApplicationServer.App_Code;
-using System.Linq;
-using System.Xml.Linq;
-using System.Xml;
 using System.Text;
 using System.Web;
-using System;
 using System.Collections.Generic;
 
 namespace ARApplicationServer
