@@ -3,7 +3,6 @@ using System.Collections.Specialized;
 using ARApplicationServer.App_Code;
 using System.Text;
 using System.Web;
-using System.Linq;
 using System.Collections.Generic;
 
 namespace ARApplicationServer
@@ -126,7 +125,6 @@ namespace ARApplicationServer
                 {
                     targets.Add(s);
                 }
-                //targets = ss.Split(',').ToList<string>();
             }
         }
 
