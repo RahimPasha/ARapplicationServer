@@ -6,6 +6,7 @@ using ARApplicationServer.App_Code;
 using System.Configuration;
 using System.Linq;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace ARApplicationServer
 {
@@ -77,6 +78,22 @@ namespace ARApplicationServer
                     HttpContext.Current.Response.Write("\n" + THhandler.Download());
                     HttpContext.Current.Response.Flush();
                     //HttpContext.Current.Response.Close();
+                }
+                else if (Parameter1.ToLower() == "get")
+                {
+                    HttpContext.Current.Response.ClearContent();
+                    try
+                    {
+                        if (MyQueryString.GetKey(1).Contains("tag"))
+                        {
+                            HttpContext.Current.Response.Write(JsonConvert.SerializeObject(
+                                THhandler.GetTargets(MyQueryString.Get(1).Split(',').ToList())));
+                        }
+                    }catch(Exception)
+                    {
+                        HttpContext.Current.Response.Write("Bad Format or an internal error");
+                    }
+                    HttpContext.Current.Response.Flush();
                 }
                 else if (Parameter1.ToLower() == "chat")
                 {

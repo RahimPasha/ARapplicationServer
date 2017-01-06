@@ -4,6 +4,8 @@ using ARApplicationServer.App_Code;
 using System.Text;
 using System.Web;
 using System.Collections.Generic;
+using System;
+using Newtonsoft.Json;
 
 namespace ARApplicationServer
 {
@@ -79,8 +81,7 @@ namespace ARApplicationServer
             string DownloadReplydat = "";
             string targetname = "Stone";
             RegisterationReply = Register();
-            List<string> targets = new List<string>();
-            GetTargets(targets);
+            List<string> targets = new List<string>(GetTargets(Global.DownloadingTags));
             if(targets.Count==0)
             {
                 return "Get Targets: There is no targets witrh specified tags";
@@ -108,23 +109,16 @@ namespace ARApplicationServer
                 "<br />" + "Download for dat: " + DownloadReplydat + "<br />";
         }
 
-        private static void GetTargets(List<string> targets)
+        public static List<string> GetTargets(List<string> tags)
         {
 
             using (WebClient client = new WebClient())
             {
                 string uriAdress = string.Format(Global.TargetHubAddress + "/Target/GetTargets?Identifier={0}&ID={1}",
                     Global.ServerID, Global.Identifier);
-                foreach (string s in Global.DownloadingTags)
+                foreach (string s in tags )
                     uriAdress += "&Tags[]=" + s;
-                byte[] response = client.DownloadData(uriAdress);
-                //targets = response.ToList();
-                string ss = Encoding.Default.GetString(response);
-                ss = ss.Replace("\"", "").Replace("[", "").Replace("]", "");
-                foreach(string s in ss.Split(','))
-                {
-                    targets.Add(s);
-                }
+                return JsonConvert.DeserializeObject<List<string>>(Encoding.Default.GetString(client.DownloadData(uriAdress)));
             }
         }
 
