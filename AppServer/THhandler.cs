@@ -6,6 +6,7 @@ using System.Web;
 using System.Collections.Generic;
 using System;
 using Newtonsoft.Json;
+using System.Xml;
 
 namespace ARApplicationServer
 {
@@ -56,6 +57,7 @@ namespace ARApplicationServer
 
                 var Ufile = new System.IO.FileInfo(HttpContext.Current.Server.MapPath(Global.outgoingDatabase +
                     "/" + "shared.xml"));
+                ChangeStatusToShared(Ufile);
                 UploadReplyxml = Encoding.UTF8.GetString(client.UploadFile(uriAdress, "POST", Ufile.FullName));
             }
             using (WebClient client = new WebClient())
@@ -72,6 +74,21 @@ namespace ARApplicationServer
             }
             return "Registration: " + RegisterationReply + "<br />" + "Upload for xml: " + UploadReplyxml + "<br />" +
                 "<br />" + "Upload for dat: " + UploadReplydat + "<br />";
+        }
+
+        private static void ChangeStatusToShared(System.IO.FileInfo TargetFile)
+        {
+            XmlDocument xDoc = new XmlDocument(); // reading XML documents
+            xDoc.Load(TargetFile.FullName);
+            if (xDoc.SelectSingleNode("/QCARConfig/Shared") != null)
+                xDoc.SelectSingleNode("/QCARConfig/Shared").InnerText = "True";
+            else
+            {
+                XmlElement shared = xDoc.CreateElement("Shared");
+                shared.InnerText = "True";
+                xDoc.GetElementsByTagName("QCARConfig")[0].InsertAfter(shared, xDoc.GetElementsByTagName("QCARConfig")[0].LastChild);
+                xDoc.Save(TargetFile.FullName);
+            }
         }
 
         internal static string Download()
