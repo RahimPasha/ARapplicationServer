@@ -28,14 +28,15 @@ namespace ARApplicationServer.App_Code
         public static List<string> UploadingTags = new List<string>();
         public static List<string> DownloadingTags = new List<string>();
         public static XmlDocument xDoc = new XmlDocument(); // reading XML documents
-        public static string WebAddress = getWebAddress();//"http://localhost:7204";
+        //TODO: address of the server that is hosting the application should be retrived. 
+        public static string ServerAddress = "http://localhost:7204"; //getServerAddress();
 
-        private static string getWebAddress()
+        private static string getServerAddress()
         {
             string strHostName = System.Net.Dns.GetHostName();
-            //IPHostEntry ipHostInfo = Dns.GetHostEntry(strHostName);
-            //IPAddress ipAddress = ipHostInfo.AddressList[0];
-            return strHostName;
+            IPHostEntry ipHostInfo = Dns.GetHostEntry(strHostName);
+            IPAddress ipAddress = ipHostInfo.AddressList[0];
+            return ipHostInfo.HostName;
         }
             
     }

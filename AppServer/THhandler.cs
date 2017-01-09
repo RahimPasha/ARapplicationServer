@@ -21,7 +21,7 @@ namespace ARApplicationServer
             using (WebClient request = new WebClient())
             {
                 string uriAdress = string.Format(Global.TargetHubAddress +
-                    "/server/register?server={0}&id={1}", Global.ServerName, Global.ServerID);
+                    "/server/register?server={0}&id={1}&Address={2}", Global.ServerName, Global.ServerID,Global.ServerAddress);
                 Response = request.DownloadString(uriAdress);
                 if (Response.Contains("Identifire:"))
                 {
