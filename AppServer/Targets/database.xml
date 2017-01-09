@@ -3,4 +3,9 @@
   <Tracking>
     <ImageTarget name="chips" size="21.000000 16.227272"/>
   </Tracking>
+    <Tags>
+        <Tag>chip</Tag>
+        <Tag>lab</Tag>
+        <Tag>test</Tag>
+	</Tags>
 </QCARConfig>

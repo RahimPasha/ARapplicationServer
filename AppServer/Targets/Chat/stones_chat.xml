@@ -1,7 +1,8 @@
 <TargetChatFile>
   <TargetName>stones</TargetName>
-  <MessageNumber>156</MessageNumber>
-  <LastMessage>dhjy</LastMessage>
+  <Shared>False</Shared>
+  <MessageNumber>158</MessageNumber>
+  <LastMessage>test</LastMessage>
   <Messages>
     <Message>
       <User>Rahim</User>
@@ -626,6 +627,14 @@
     <Message>
       <User>Rahim</User>
       <Body>dhjy</Body>
+    </Message>
+    <Message>
+      <User>jennifer lopez</User>
+      <Body>dgd</Body>
+    </Message>
+    <Message>
+      <User>jennifer lopez</User>
+      <Body>test</Body>
     </Message>
   </Messages>
 </TargetChatFile>

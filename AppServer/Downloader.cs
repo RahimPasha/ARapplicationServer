@@ -43,32 +43,27 @@ namespace ARApplicationServer
         }
         public static void Download(System.IO.FileInfo Dfile)
         {
-            HttpContext.Current.Response.ClearContent();
-            HttpContext.Current.Response.ClearHeaders();
-            HttpContext.Current.Response.ContentType = "APPLICATION/OCTET-STREAM";
-            String Header = "Attachment; Filename=" + Dfile.Name;
-            HttpContext.Current.Response.AppendHeader("Content-Disposition", Header);
-            HttpContext.Current.Response.AppendHeader("Content-Length", Dfile.Length.ToString());
-            HttpContext.Current.Response.WriteFile(Dfile.FullName);
-            try
+            if (Dfile.Exists)
             {
-
-                if (Dfile.Exists)
+                HttpContext.Current.Response.ClearContent();
+                HttpContext.Current.Response.ClearHeaders();
+                HttpContext.Current.Response.ContentType = "APPLICATION/OCTET-STREAM";
+                String Header = "Attachment; Filename=" + Dfile.Name;
+                HttpContext.Current.Response.AppendHeader("Content-Disposition", Header);
+                HttpContext.Current.Response.AppendHeader("Content-Length", Dfile.Length.ToString());
+                HttpContext.Current.Response.WriteFile(Dfile.FullName);
+                try
                 {
                     HttpContext.Current.Response.Headers.Add("status", "OK");
                     HttpContext.Current.Response.Headers.Add("File", "Downlaod");
                     HttpContext.Current.Response.WriteFile(Dfile.FullName);
                 }
-                else
+                catch (Exception e)
                 {
-                    HttpContext.Current.Response.Headers.Add("file", "Not found");
+                    HttpContext.Current.Response.Headers.Add("Error", e.Message);
                 }
             }
-            catch (Exception e)
-            {
-                HttpContext.Current.Response.Headers.Add("Error", e.Message);
-            }
-
+            HttpContext.Current.Response.Headers.Add("file", "Not found");
             HttpContext.Current.Response.Flush();
         }
         public static void upload(string sFileName, string sFilePath, HttpRequest Request)

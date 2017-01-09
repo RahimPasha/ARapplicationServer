@@ -7,6 +7,9 @@ using System.Collections.Generic;
 using System;
 using Newtonsoft.Json;
 using System.Xml;
+using System.Linq;
+using System.Configuration;
+using System.Web.Configuration;
 
 namespace ARApplicationServer
 {
@@ -17,24 +20,30 @@ namespace ARApplicationServer
 
             string Response = "";
             int ID = -1;
-            NameValueCollection queryString = new NameValueCollection { { "server", Global.ServerName }, { "id", Global.ServerID } };
             using (WebClient request = new WebClient())
             {
                 string uriAdress = string.Format(Global.TargetHubAddress +
-                    "/server/register?server={0}&id={1}&Address={2}", Global.ServerName, Global.ServerID,Global.ServerAddress);
+                    "/server/register?server={0}&Identifier={1}&Address={2}", Global.ServerName, Global.Identifier, Global.ServerAddress);
                 Response = request.DownloadString(uriAdress);
-                if (Response.Contains("Identifire:"))
+                if (Response.Contains("ID:"))
                 {
-                    Response = Response.Replace("Identifire:", "");
+                    Response = Response.Replace("ID:", "");
                     Response = Response.Replace("\"", "");
                     int.TryParse(Response, out ID);
                 }
             }
             if (ID > 0)
             {
-                Global.xDoc.SelectSingleNode("Server/Registered").InnerText = "True";
-                Global.xDoc.SelectSingleNode("Server/Identifier").InnerText = ID.ToString();
-                Global.xDoc.Save(Global.Dfile.FullName);
+                Configuration config = WebConfigurationManager.OpenWebConfiguration(HttpContext.Current.Request.ApplicationPath);
+                AppSettingsSection appSettings = (AppSettingsSection)config.GetSection("appSettings");
+                if (appSettings != null)
+                {
+                    appSettings.Settings["Registered"].Value = "True";
+                    appSettings.Settings["ID"].Value = ID.ToString();
+                    config.Save();
+                }
+                Global.Registered = "True";
+                Global.ServerID = ID.ToString(); ;
                 return "Registration was successful" + "<br />";
             }
 
@@ -46,37 +55,41 @@ namespace ARApplicationServer
             string UploadReplyxml = "";
             string UploadReplydat = "";
             string UploadReplychat = "";
+            List<string> tags = new List<string>();
+            var TargetXMLfile = new System.IO.FileInfo(HttpContext.Current.Server.MapPath(Global.OutgoingDatabase +
+                    "/" + Global.OutgoingTargetName + ".xml"));
+            XmlDocument xDoc = new XmlDocument();
+            xDoc.Load(TargetXMLfile.FullName);
+            tags = xDoc.SelectNodes("QCARConfig/Tags/Tag").Cast<XmlNode>().Select(x => x.InnerText).ToList();
             RegisterationReply = Register();
             using (WebClient client = new WebClient())
             {
                 string uriAdress = string.Format(Global.TargetHubAddress +
                     "/Target/Upload?Identifier={0}&ID={1}&TargetName={2}",
-                    Global.ServerID, Global.Identifier, Global.OutgoingTargetName);
+                    Global.Identifier, Global.ServerID, Global.OutgoingTargetName);
 
-                foreach (string s in Global.UploadingTags)
+                foreach (string s in tags)
                     uriAdress += "&Tags[]=" + s;
 
-                var Ufile = new System.IO.FileInfo(HttpContext.Current.Server.MapPath(Global.outgoingDatabase +
-                    "/" + "shared.xml"));
-                UploadReplyxml = Encoding.UTF8.GetString(client.UploadFile(uriAdress, "POST", Ufile.FullName));
+                UploadReplyxml = Encoding.UTF8.GetString(client.UploadFile(uriAdress, "POST", TargetXMLfile.FullName));
             }
             using (WebClient client = new WebClient())
             {
                 string uriAdress = string.Format("{0}/Target/Upload?Identifier={1}&ID={2}&TargetName={3}", Global.TargetHubAddress,
-                    Global.ServerID, Global.Identifier, Global.OutgoingTargetName);
+                    Global.Identifier, Global.ServerID, Global.OutgoingTargetName);
 
-                foreach (string s in Global.UploadingTags)
+                foreach (string s in tags)
                     uriAdress += "&Tags[]=" + s;
 
-                var Ufile = new System.IO.FileInfo(HttpContext.Current.Server.MapPath(Global.outgoingDatabase +
-                    "/" + "shared.dat"));
+                var Ufile = new System.IO.FileInfo(HttpContext.Current.Server.MapPath(Global.OutgoingDatabase +
+                    "/" + Global.OutgoingTargetName + ".dat"));
                 UploadReplydat = Encoding.UTF8.GetString(client.UploadFile(uriAdress, "POST", Ufile.FullName));
             }
             using (WebClient client = new WebClient())
             {
                 string uriAdress = string.Format("{0}/Target/Upload?Identifier={1}&ID={2}&TargetName={3}", Global.TargetHubAddress,
-                    Global.ServerID, Global.Identifier, Global.OutgoingTargetName);
-                foreach (string s in Global.UploadingTags)
+                    Global.Identifier, Global.ServerID, Global.OutgoingTargetName);
+                foreach (string s in tags)
                     uriAdress += "&Tags[]=" + s;
 
                 var Ufile = new System.IO.FileInfo(HttpContext.Current.Server.MapPath(Global.ChatFolder +
@@ -107,39 +120,29 @@ namespace ARApplicationServer
             }
         }
 
-        internal static string Download()
+        internal static string Download(string targetname)
         {
             string RegisterationReply = "";
             string DownloadReplyxml = "";
             string DownloadReplydat = "";
-            string targetname = "Stone";
             RegisterationReply = Register();
-            List<string> targets = new List<string>(GetTargets(Global.DownloadingTags));
-            if(targets.Count==0)
-            {
-                return "Get Targets: There is no targets with specified tags";
-            }
-            else
-            {
-                targetname = targets[0];
-            }
             using (WebClient client = new WebClient())
             {
                 //client.QueryString.Add("file")
-                var Dowfile = new System.IO.FileInfo(HttpContext.Current.Server.MapPath(Global.incomingDatabase + "/" + targetname + ".xml"));
+                var Dowfile = new System.IO.FileInfo(HttpContext.Current.Server.MapPath(Global.IncomingDatabase + "/" + targetname + ".xml"));
                 string uriAdress = string.Format("{0}/Target/Download?Identifier={1}&ID={2}&TargetName={3}&format={4}",
-                    Global.TargetHubAddress, Global.ServerID, Global.Identifier, targetname, "xml");
+                    Global.TargetHubAddress, Global.Identifier, Global.ServerID, targetname, "xml");
                 client.DownloadFile(uriAdress, Dowfile.FullName);
                 DownloadReplyxml = "OK";
-                Dowfile = new System.IO.FileInfo(HttpContext.Current.Server.MapPath(Global.incomingDatabase + "/" + targetname + ".dat"));
+                Dowfile = new System.IO.FileInfo(HttpContext.Current.Server.MapPath(Global.IncomingDatabase + "/" + targetname + ".dat"));
                 uriAdress = string.Format("{0}/Target/Download?Identifier={1}&ID={2}&TargetName={3}&format={4}", Global.TargetHubAddress,
-                    Global.ServerID, Global.Identifier, targetname, "dat");
+                    Global.Identifier, Global.ServerID, targetname, "dat");
                 client.DownloadFile(uriAdress, Dowfile.FullName);
                 DownloadReplydat = "OK";
                 //Download Chat File
                 Dowfile = new System.IO.FileInfo(HttpContext.Current.Server.MapPath(Global.ChatFolder + "/" + targetname+"_chat" + ".xml"));
                 uriAdress = string.Format("{0}/Target/Download?Identifier={1}&ID={2}&TargetName={3}&format={4}", Global.TargetHubAddress,
-                    Global.ServerID, Global.Identifier, targetname + "_chat", "xml");
+                    Global.Identifier, Global.ServerID, targetname + "_chat", "xml");
                 client.DownloadFile(uriAdress, Dowfile.FullName);
             }
 
@@ -160,65 +163,6 @@ namespace ARApplicationServer
             }
         }
 
-
-
-            /*Task<string> Registered = registerAsync();
-            if(Registered.Result == "approved")
-            {
-                WebClient client = new WebClient();
-                client.DownloadFile("http://localhost:7204/default.aspx?file=second.xml","second.xml");
-                client.DownloadFile("http://localhost:7204/default.aspx?file=second.dat", "second.dat");
-            }
-            */
-            /*
-            #region Uploading This server's Database to TH
-            //TODO: Try and catch is neccessary due to file not found error and other errors
-
-            NameValueCollection queryString = new NameValueCollection { { "request", "register" }, { "server", ServerName }, { "ID", ServerID } };
-            Dfile = new System.IO.FileInfo(HttpContext.Current.Server.MapPath(outgoingDatabase + "/" + "shared.xml"));
-            HttpContext.Current.Response.Write(Dfile.FullName);
-
-            using (WebClient request = new WebClient())
-            {
-                request.QueryString.Add(queryString);
-                request.UploadFile(TargetHubAddress, Dfile.FullName);
-            }
-            Dfile = new System.IO.FileInfo(HttpContext.Current.Server.MapPath(outgoingDatabase + "/" + "shared.dat"));
-            using (WebClient request = new WebClient())
-            {
-                request.QueryString.Add(queryString);
-                request.UploadFile(TargetHubAddress, Dfile.FullName);
-            }
-            #endregion
-
-            #region Downloading Database of other servers from TH
-            //TODO: try and catch is needed
-            using (WebClient client = new WebClient())
-            {
-                //client.QueryString.Add("file")
-                Dfile = new System.IO.FileInfo(HttpContext.Current.Server.MapPath(incomingDatabase + "/" + "shared.xml"));
-                HttpContext.Current.Response.Write(TargetHubAddress + "?file=" + Dfile.Name + "&server=" + ServerName + "&ID=" + ServerID + "--" + Dfile.FullName);
-                client.DownloadFile(TargetHubAddress + "?file=" + Dfile.FullName + "&server=" + ServerName + "&ID=" + ServerID, Dfile.FullName);
-                Dfile = new System.IO.FileInfo(HttpContext.Current.Server.MapPath(incomingDatabase + "/" + "shared.dat"));
-                client.DownloadFile(TargetHubAddress + "?file=" + Dfile.FullName + "&server=" + ServerName + "&ID=" + ServerID, Dfile.FullName);
-            }
-            #endregion
-
-        }
-            */
-            /* private static async Task<string> registerAsync()
-             {
-                 using (var client = new HttpClient())
-                 {
-
-                     var values = new Dictionary<string, string> { { "ID", ServerID }, { "Name", ServerName } };
-                     var content = new FormUrlEncodedContent(values);
-                     var response = await client.PostAsync(TargetHubAddress, content);
-                     var responseString = await response.Content.ReadAsStringAsync();
-                     return response.Content.ToString().ToLower();
-                 }
-             }*/
-
         internal static void SendMessage(string TargetName, string User, string SentMessage)
         {
 
@@ -226,7 +170,7 @@ namespace ARApplicationServer
             {
                 string uriAdress = HttpUtility.UrlEncode(string.Format(Global.TargetHubAddress +
                     "/Target/ForwardMessage?Identifier={0}&ID={1}&TargetName={2}&UserName={3}&SentMessage={4}",
-                    Global.ServerID, Global.Identifier, TargetName, User, SentMessage));
+                    Global.Identifier, Global.ServerID, TargetName, User, SentMessage));
                 client.OpenWrite(uriAdress);
             }
         }

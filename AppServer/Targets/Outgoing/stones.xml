@@ -3,4 +3,9 @@
   <Tracking>
     <ImageTarget name="stones" size="30.000000 21.000000" />
   </Tracking>
+  <Tags>
+        <Tag>stone</Tag>
+        <Tag>park</Tag>
+        <Tag>sea</Tag>
+  </Tags>
 </QCARConfig>

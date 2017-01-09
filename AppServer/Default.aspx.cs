@@ -19,33 +19,11 @@ namespace ARApplicationServer
         {
             HttpRequest q = Request;
             NameValueCollection MyQueryString = q.QueryString;
-            Global.TargetHubAddress = ConfigurationManager.AppSettings["HubAddress"].ToString();
-            Global.serverConfigFile = "Config" + "/" + "Config.xml";
-            Global.Dfile = new System.IO.FileInfo(HttpContext.Current.Server.MapPath(Global.serverConfigFile));
-            Global.xDoc.Load(Global.Dfile.FullName);
-            Global.ServerName = Global.xDoc.SelectSingleNode("Server/Name").InnerText;
-            Global.ServerID = Global.xDoc.SelectSingleNode("Server/ID").InnerText;
-            Global.Registered = Global.xDoc.SelectSingleNode("Server/Registered").InnerText;
-            Global.Identifier = Global.xDoc.SelectSingleNode("Server/Identifier").InnerText;
-            Global.TargetsFolder = Global.xDoc.SelectSingleNode("Server/Targets/TargetsFolder").InnerText;
-            Global.incomingDatabase = Global.xDoc.SelectSingleNode("Server/Targets/Incoming/Address").InnerText;
-            Global.outgoingDatabase = Global.xDoc.SelectSingleNode("Server/Targets/Outgoing/Address").InnerText;
-            Global.ChatFolder = Global.xDoc.SelectSingleNode("Server/Targets/ChatFile").InnerText;
-            Global.IncomingTargetName = Global.xDoc.SelectSingleNode("Server/Targets/Incoming/Name").InnerText;
-            Global.OutgoingTargetName = Global.xDoc.SelectSingleNode("Server/Targets/Outgoing/Name").InnerText;
-            Global.UploadingTags = Global.xDoc.SelectNodes("Server/Targets/Outgoing/Tags/Tag").Cast<XmlNode>().
-                Select(x => x.InnerText).ToList();
-            Global.DownloadingTags = Global.xDoc.SelectNodes("Server/Targets/Incoming/Tags/Tag").Cast<XmlNode>().
-                Select(x => x.InnerText).ToList();
-
-
-            if (MyQueryString.HasKeys()) // On each target detection an empty request comes to the server from the client
-            //may be in the future
+            if (MyQueryString.HasKeys())
             {
                 Parameter1 = MyQueryString.GetKey(0);
                 if (Parameter1.ToLower() == "file")
                 {
-                    //fileNmae = MyQueryString.Get(0);
                     fileName = "Database" + MyQueryString.Get(0).Substring(MyQueryString.Get(0).LastIndexOf('.'));
                     fileAddress = Global.TargetsFolder;
                     Downloader.Download(fileName, fileAddress);
@@ -54,8 +32,8 @@ namespace ARApplicationServer
                 else if (Parameter1.ToLower() == "shared")
                 {
                     //fileNmae = MyQueryString.Get(0);
-                    fileAddress = Global.incomingDatabase;
-                    fileName = "shared" + MyQueryString.Get(0).Substring(MyQueryString.Get(0).LastIndexOf('.'));
+                    fileAddress = Global.IncomingDatabase;
+                    fileName = Global.IncomingTargetName + MyQueryString.Get(0).Substring(MyQueryString.Get(0).LastIndexOf('.'));
                     Downloader.Download(fileName, fileAddress);
                 }
                 else if (Parameter1.ToLower() == "register")
@@ -75,7 +53,7 @@ namespace ARApplicationServer
                 else if (Parameter1.ToLower() == "download")
                 {
                     HttpContext.Current.Response.ClearContent();
-                    HttpContext.Current.Response.Write("\n" + THhandler.Download());
+                    HttpContext.Current.Response.Write("\n" + THhandler.Download(MyQueryString.Get(0)));
                     HttpContext.Current.Response.Flush();
                     //HttpContext.Current.Response.Close();
                 }

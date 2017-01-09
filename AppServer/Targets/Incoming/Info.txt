@@ -1,3 +1,3 @@
 Shared database between Target hub and this server.
 
-The content of this folder is also going to be shared with the end user under the name of shared.xml and shared.dat.
+The content of this folder is also going to be shared with the end user under the name of [targetname].xml and [targetname].dat.
