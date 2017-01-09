@@ -45,6 +45,7 @@ namespace ARApplicationServer
             string RegisterationReply = "";
             string UploadReplyxml = "";
             string UploadReplydat = "";
+            string UploadReplychat = "";
             RegisterationReply = Register();
             using (WebClient client = new WebClient())
             {
@@ -57,7 +58,6 @@ namespace ARApplicationServer
 
                 var Ufile = new System.IO.FileInfo(HttpContext.Current.Server.MapPath(Global.outgoingDatabase +
                     "/" + "shared.xml"));
-                ChangeStatusToShared(Ufile);
                 UploadReplyxml = Encoding.UTF8.GetString(client.UploadFile(uriAdress, "POST", Ufile.FullName));
             }
             using (WebClient client = new WebClient())
@@ -72,6 +72,22 @@ namespace ARApplicationServer
                     "/" + "shared.dat"));
                 UploadReplydat = Encoding.UTF8.GetString(client.UploadFile(uriAdress, "POST", Ufile.FullName));
             }
+            using (WebClient client = new WebClient())
+            {
+                string uriAdress = string.Format("{0}/Target/Upload?Identifier={1}&ID={2}&TargetName={3}", Global.TargetHubAddress,
+                    Global.ServerID, Global.Identifier, Global.OutgoingTargetName);
+                foreach (string s in Global.UploadingTags)
+                    uriAdress += "&Tags[]=" + s;
+
+                var Ufile = new System.IO.FileInfo(HttpContext.Current.Server.MapPath(Global.ChatFolder +
+                    "/" + Global.OutgoingTargetName+"_chat.xml"));
+                if (Ufile.Exists)
+                {
+                    //The target is being shared so its shared status should change to true
+                    ChangeStatusToShared(Ufile);
+                    UploadReplychat = Encoding.UTF8.GetString(client.UploadFile(uriAdress, "POST", Ufile.FullName));
+                }
+            }
             return "Registration: " + RegisterationReply + "<br />" + "Upload for xml: " + UploadReplyxml + "<br />" +
                 "<br />" + "Upload for dat: " + UploadReplydat + "<br />";
         }
@@ -80,13 +96,13 @@ namespace ARApplicationServer
         {
             XmlDocument xDoc = new XmlDocument(); // reading XML documents
             xDoc.Load(TargetFile.FullName);
-            if (xDoc.SelectSingleNode("/QCARConfig/Shared") != null)
-                xDoc.SelectSingleNode("/QCARConfig/Shared").InnerText = "True";
+            if (xDoc.SelectSingleNode("/TargetChatFile/Shared") != null)
+                xDoc.SelectSingleNode("/TargetChatFile/Shared").InnerText = "True";
             else
             {
                 XmlElement shared = xDoc.CreateElement("Shared");
                 shared.InnerText = "True";
-                xDoc.GetElementsByTagName("QCARConfig")[0].InsertAfter(shared, xDoc.GetElementsByTagName("QCARConfig")[0].LastChild);
+                xDoc.GetElementsByTagName("TargetChatFile")[0].InsertAfter(shared, xDoc.GetElementsByTagName("TargetChatFile")[0].FirstChild);
                 xDoc.Save(TargetFile.FullName);
             }
         }
@@ -101,7 +117,7 @@ namespace ARApplicationServer
             List<string> targets = new List<string>(GetTargets(Global.DownloadingTags));
             if(targets.Count==0)
             {
-                return "Get Targets: There is no targets witrh specified tags";
+                return "Get Targets: There is no targets with specified tags";
             }
             else
             {
@@ -120,6 +136,11 @@ namespace ARApplicationServer
                     Global.ServerID, Global.Identifier, targetname, "dat");
                 client.DownloadFile(uriAdress, Dowfile.FullName);
                 DownloadReplydat = "OK";
+                //Download Chat File
+                Dowfile = new System.IO.FileInfo(HttpContext.Current.Server.MapPath(Global.ChatFolder + "/" + targetname+"_chat" + ".xml"));
+                uriAdress = string.Format("{0}/Target/Download?Identifier={1}&ID={2}&TargetName={3}&format={4}", Global.TargetHubAddress,
+                    Global.ServerID, Global.Identifier, targetname + "_chat", "xml");
+                client.DownloadFile(uriAdress, Dowfile.FullName);
             }
 
             return "Registration: " + RegisterationReply + "<br />" + "Download for xml: " + DownloadReplyxml + "<br />" +
@@ -197,5 +218,17 @@ namespace ARApplicationServer
                      return response.Content.ToString().ToLower();
                  }
              }*/
+
+        internal static void SendMessage(string TargetName, string User, string SentMessage)
+        {
+
+            using (WebClient client = new WebClient())
+            {
+                string uriAdress = HttpUtility.UrlEncode(string.Format(Global.TargetHubAddress +
+                    "/Target/ForwardMessage?Identifier={0}&ID={1}&TargetName={2}&UserName={3}&SentMessage={4}",
+                    Global.ServerID, Global.Identifier, TargetName, User, SentMessage));
+                client.OpenWrite(uriAdress);
+            }
         }
+    }
 }

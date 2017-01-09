@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Xml;
 
@@ -27,6 +28,15 @@ namespace ARApplicationServer.App_Code
         public static List<string> UploadingTags = new List<string>();
         public static List<string> DownloadingTags = new List<string>();
         public static XmlDocument xDoc = new XmlDocument(); // reading XML documents
+        public static string WebAddress = getWebAddress();//"http://localhost:7204";
+
+        private static string getWebAddress()
+        {
+            string strHostName = System.Net.Dns.GetHostName();
+            //IPHostEntry ipHostInfo = Dns.GetHostEntry(strHostName);
+            //IPAddress ipAddress = ipHostInfo.AddressList[0];
+            return strHostName;
+        }
             
     }
 }

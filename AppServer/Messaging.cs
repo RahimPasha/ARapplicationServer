@@ -50,8 +50,8 @@ namespace ARApplicationServer
             this.prepareNewPolling(this);
         }
 
-        //this constructor is only for objects who wants to update the chat file.
-        public Messaging(string folderAdderss, string TargetName, string User , string SentMessage)
+        //these two constructors are only for objects who wants to update the chat file.
+        public Messaging(string folderAdderss, string TargetName, string User, string SentMessage, string sender)
         {
             FileAddress = HttpContext.Current.Server.MapPath(folderAdderss + "/" + TargetName + "_chat.xml");
             this.fileSize = 0;
@@ -63,12 +63,32 @@ namespace ARApplicationServer
             this.Dfile = new System.IO.FileInfo(FileAddress);
             this.FileSizeFlag = false;
             this.UpdateChatFile(User, SentMessage);
+            if(IsShared() && sender.ToLower() == "client")
+            {
+                THhandler.SendMessage(TargetName, User, SentMessage);
+            }
             //this.userName = userName;
             //Messaging.Messages.Add(this);
         }
 
+        public Messaging(string folderAdderss, string TargetName, string User, string SentMessage)
+            : this(folderAdderss, TargetName, User, SentMessage,"NA")
+        {            
+        }
+
          #endregion
 
+        private bool IsShared()
+        {
+            if (Dfile.Exists)
+            {
+                XmlDocument xDoc = new XmlDocument(); // reading XML documents
+                xDoc.Load(Dfile.FullName);
+                XmlNode shared = xDoc.SelectSingleNode("/TargetChatFile/shared");
+                return (shared.InnerText == "True") ? true : false;
+            }
+            return false;
+        }
         private void prepareNewPolling(Messaging messaging)
         {
             List<Messaging> temp = new List<Messaging>();

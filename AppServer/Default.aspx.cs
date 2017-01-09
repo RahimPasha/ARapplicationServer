@@ -104,24 +104,25 @@ namespace ARApplicationServer
                     {
                         string temp = MyQueryString.Get("lastMessage");
                         string lastMessage = Messaging.DecodeText(temp);
-                        
+
                         double numberOfMessages = double.Parse(MyQueryString.Get("FileSize"));
 
                         temp = MyQueryString.Get("User");
                         string User = Messaging.DecodeText(temp);
-                        Messaging ChatHadnler = new Messaging(fileAddress, targetName, lastMessage, numberOfMessages,User);
+                        Messaging ChatHadnler = new Messaging(fileAddress, targetName, lastMessage, numberOfMessages, User);
                         ChatHadnler.ChatRequest();
                     }
                     else if (MyQueryString.GetKey(1) == "SentMessage")
                     {
-                        string temp = MyQueryString.Get("SentMessage");
-                        string SentMessage = Messaging.DecodeText(temp);
-                        temp = MyQueryString.Get("User");
-                        string User = Messaging.DecodeText(temp);
-                        Messaging ChatHadnler = new Messaging(fileAddress, targetName, User, SentMessage);
+                        string SentMessage = Messaging.DecodeText(MyQueryString.Get("SentMessage"));
+                        string User = Messaging.DecodeText(MyQueryString.Get("User"));
+                        string temp = MyQueryString.Get("Sender");
+                        string Sender = Messaging.DecodeText(temp);
+                        Messaging ChatHadnler = new Messaging(fileAddress, targetName, User, SentMessage, Sender);
                         HttpContext.Current.Response.ClearContent();
                         HttpContext.Current.Response.Flush();
                     }
+                    
                 }
             }
         }             
