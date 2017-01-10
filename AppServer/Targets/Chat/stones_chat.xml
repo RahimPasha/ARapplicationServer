@@ -1,8 +1,8 @@
 <TargetChatFile>
   <TargetName>stones</TargetName>
-  <Shared>False</Shared>
-  <MessageNumber>158</MessageNumber>
-  <LastMessage>test</LastMessage>
+  <Shared>True</Shared>
+  <MessageNumber>159</MessageNumber>
+  <LastMessage>Hiiiiiiiii</LastMessage>
   <Messages>
     <Message>
       <User>Rahim</User>
@@ -635,6 +635,10 @@
     <Message>
       <User>jennifer lopez</User>
       <Body>test</Body>
+    </Message>
+    <Message>
+      <User>FireFox</User>
+      <Body>Hiiiiiiiii</Body>
     </Message>
   </Messages>
 </TargetChatFile>

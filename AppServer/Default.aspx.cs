@@ -33,7 +33,7 @@ namespace ARApplicationServer
                 {
                     //fileNmae = MyQueryString.Get(0);
                     fileAddress = Global.IncomingDatabase;
-                    fileName = Global.IncomingTargetName + MyQueryString.Get(0).Substring(MyQueryString.Get(0).LastIndexOf('.'));
+                    fileName = Global.SharedDatabaseName + MyQueryString.Get(0).Substring(MyQueryString.Get(0).LastIndexOf('.'));
                     Downloader.Download(fileName, fileAddress);
                 }
                 else if (Parameter1.ToLower() == "register")

@@ -84,7 +84,7 @@ namespace ARApplicationServer
             {
                 XmlDocument xDoc = new XmlDocument(); // reading XML documents
                 xDoc.Load(Dfile.FullName);
-                XmlNode shared = xDoc.SelectSingleNode("/TargetChatFile/shared");
+                XmlNode shared = xDoc.SelectSingleNode("TargetChatFile/Shared");
 
                 return shared != null ? (shared.InnerText == "True") ? true : false : false;
             }

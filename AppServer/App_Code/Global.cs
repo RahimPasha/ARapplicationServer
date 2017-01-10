@@ -20,7 +20,7 @@ namespace ARApplicationServer.App_Code
 
         public static string TargetsFolder = ConfigurationManager.AppSettings["TargetsFolder"].ToString();
 
-        public static string IncomingTargetName = ConfigurationManager.AppSettings["IncomingTargetName"].ToString();
+        public static string SharedDatabaseName = ConfigurationManager.AppSettings["SharedDatabaseName"].ToString();
         public static string OutgoingTargetName = ConfigurationManager.AppSettings["OutgoingTargetName"].ToString();
         public static string IncomingDatabase = ConfigurationManager.AppSettings["IncomingFolder"].ToString();
         public static string OutgoingDatabase = ConfigurationManager.AppSettings["OutgoingFolder"].ToString();

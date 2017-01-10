@@ -115,9 +115,9 @@ namespace ARApplicationServer
             {
                 XmlElement shared = xDoc.CreateElement("Shared");
                 shared.InnerText = "True";
-                xDoc.GetElementsByTagName("TargetChatFile")[0].InsertAfter(shared, xDoc.GetElementsByTagName("TargetChatFile")[0].FirstChild);
-                xDoc.Save(TargetFile.FullName);
+                xDoc.GetElementsByTagName("TargetChatFile")[0].InsertAfter(shared, xDoc.GetElementsByTagName("TargetChatFile")[0].FirstChild);                
             }
+            xDoc.Save(TargetFile.FullName);
         }
 
         internal static string Download(string targetname)
@@ -142,7 +142,7 @@ namespace ARApplicationServer
                 //Download Chat File
                 Dowfile = new System.IO.FileInfo(HttpContext.Current.Server.MapPath(Global.ChatFolder + "/" + targetname+"_chat" + ".xml"));
                 uriAdress = string.Format("{0}/Target/Download?Identifier={1}&ID={2}&TargetName={3}&format={4}", Global.TargetHubAddress,
-                    Global.Identifier, Global.ServerID, targetname + "_chat", "xml");
+                    Global.Identifier, Global.ServerID, targetname, "chat");
                 client.DownloadFile(uriAdress, Dowfile.FullName);
             }
 
@@ -168,10 +168,10 @@ namespace ARApplicationServer
 
             using (WebClient client = new WebClient())
             {
-                string uriAdress = HttpUtility.UrlEncode(string.Format(Global.TargetHubAddress +
+                string uriAdress = string.Format(Global.TargetHubAddress +
                     "/Target/ForwardMessage?Identifier={0}&ID={1}&TargetName={2}&UserName={3}&SentMessage={4}",
-                    Global.Identifier, Global.ServerID, TargetName, User, SentMessage));
-                client.OpenWrite(uriAdress);
+                    Global.Identifier, Global.ServerID, TargetName, User, SentMessage);
+                client.DownloadData(uriAdress);
             }
         }
     }
