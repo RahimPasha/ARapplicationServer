@@ -26,7 +26,7 @@ namespace ARApplicationServer.App_Code
         public static string OutgoingDatabase = ConfigurationManager.AppSettings["OutgoingFolder"].ToString();
         public static string ChatFolder = ConfigurationManager.AppSettings["ChatFolder"].ToString();
         //TODO: address of the server that is hosting the application should be retrived. 
-        public static string ServerAddress = "http://localhost:7204"; //getServerAddress();
+        public static string ServerAddress = ConfigurationManager.AppSettings["ServerAddress"].ToString(); //getServerAddress();
 
         private static string getServerAddress()
         {
