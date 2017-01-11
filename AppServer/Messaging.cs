@@ -255,12 +255,6 @@ namespace ARApplicationServer
             xmlString += "\t<MessageNumber>0</MessageNumber>\r\n";
             xmlString += "\t<LastMessage></LastMessage>\r\n";
             xmlString += "\t<Messages>\r\n";
-            //xmlString += "\t\t<Message>\r\n";
-            //xmlString += "\t\t\t<User>\r\n";
-            //xmlString += "\t\t\t</User>\r\n";
-            //xmlString += "\t\t\t<Body>\r\n";
-            //xmlString += "\t\t\t</Body>\r\n";
-            //xmlString += "\t\t</Message>\r\n";
             xmlString += "\t</Messages>";
 
             xmlString += "\r\n</TargetChatFile>";
