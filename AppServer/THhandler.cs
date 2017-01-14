@@ -156,10 +156,11 @@ namespace ARApplicationServer
             using (WebClient client = new WebClient())
             {
                 string uriAdress = string.Format(Global.TargetHubAddress + "/Target/GetTargets?Identifier={0}&ID={1}",
-                    Global.ServerID, Global.Identifier);
+                    Global.Identifier,Global.ServerID);
                 foreach (string s in tags )
                     uriAdress += "&Tags[]=" + s;
-                return JsonConvert.DeserializeObject<List<string>>(Encoding.Default.GetString(client.DownloadData(uriAdress)));
+                var res = JsonConvert.DeserializeObject<List<string>>(Encoding.Default.GetString(client.DownloadData(uriAdress)));
+                return res;
             }
         }
 

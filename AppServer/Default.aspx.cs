@@ -28,6 +28,12 @@ namespace ARApplicationServer
                     fileAddress = Global.TargetsFolder;
                     Downloader.Download(fileName, fileAddress);
                 }
+                else if (Parameter1.ToLower() == "ping")
+                {
+                    HttpContext.Current.Response.ClearContent();
+                    HttpContext.Current.Response.Write(MyQueryString.Get(0));
+                    HttpContext.Current.Response.Flush();
+                }
                 
                 else if (Parameter1.ToLower() == "shared")
                 {
@@ -62,7 +68,7 @@ namespace ARApplicationServer
                     HttpContext.Current.Response.ClearContent();
                     try
                     {
-                        if (MyQueryString.GetKey(1).Contains("tag"))
+                        if (MyQueryString.GetKey(1).ToLower().Contains("tag"))
                         {
                             HttpContext.Current.Response.Write(JsonConvert.SerializeObject(
                                 THhandler.GetTargets(MyQueryString.Get(1).Split(',').ToList())));
