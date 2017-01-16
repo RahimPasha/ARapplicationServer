@@ -7,6 +7,7 @@ using System.Configuration;
 using System.Linq;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using System.Web.Services;
 
 namespace ARApplicationServer
 {
@@ -15,6 +16,11 @@ namespace ARApplicationServer
         string fileAddress = "";
         string Parameter1;
         string fileName;
+        [WebMethod]
+        public static bool Ping(string value)
+        {
+            return true;
+        }
         protected void Page_Load(object sender, EventArgs e)
         {
             HttpRequest q = Request;
