@@ -18,8 +18,9 @@ namespace ARApplicationServer.Migrations
 
             //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
             //  to avoid creating duplicate seed data. E.g.
-            context.Targets.AddOrUpdate(new Models.Target { Id = 1, Name = "test" });
-            context.Servers.AddOrUpdate(new Models.Server { Id = 1, Name = "test" });
+            context.Targets.AddOrUpdate(new Models.Target { ID = 1, Name = "targettest" });
+            context.Servers.AddOrUpdate(new Models.Server { ID = 1, Name = "Servertest" });
+            //context.Servers.AddOrUpdate(new Models.Tag { ID = 1,  });
         }
     }
 }

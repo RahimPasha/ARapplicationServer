@@ -38,10 +38,17 @@ namespace ARApplicationServer
                 else if (Parameter1.ToLower() == "th")
                 {
                     fileName = MyQueryString.Get(0);
-                    string targetName = fileName.Substring()
-                    if(db.Targets.Where(t=>t.Name == )
-                    fileAddress = Global.TargetsFolder;
-                    Downloader.Download(fileName, fileAddress);
+                    int index = fileName.LastIndexOf('.');
+                    string targetName = fileName.Substring(0, index-1);
+                    if (db.Targets.Where(t => t.Name == targetName).Count() != 0)
+                    {
+                        fileAddress = Global.TargetsFolder;
+                        Downloader.Download(fileName, fileAddress);
+                    }
+                    else
+                    {
+                        THhandler.Download(targetName);
+                    }
                 }
 
                 //else if (Parameter1.ToLower() == "shared")
