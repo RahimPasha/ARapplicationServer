@@ -13,6 +13,7 @@ namespace ARApplicationServer
 {
     public partial class Default : System.Web.UI.Page
     {
+        DAL db = new DAL();
         string fileAddress = "";
         string Parameter1;
         string fileName;
@@ -34,13 +35,15 @@ namespace ARApplicationServer
                     fileAddress = Global.TargetsFolder;
                     Downloader.Download(fileName, fileAddress);
                 }
-                //else if (Parameter1.ToLower() == "ping")
-                //{
-                //    HttpContext.Current.Response.ClearContent();
-                //    HttpContext.Current.Response.Write(MyQueryString.Get(0));
-                //    HttpContext.Current.Response.Flush();
-                //}
-                
+                else if (Parameter1.ToLower() == "th")
+                {
+                    fileName = MyQueryString.Get(0);
+                    string targetName = fileName.Substring()
+                    if(db.Targets.Where(t=>t.Name == )
+                    fileAddress = Global.TargetsFolder;
+                    Downloader.Download(fileName, fileAddress);
+                }
+
                 //else if (Parameter1.ToLower() == "shared")
                 //{
                 //    //fileNmae = MyQueryString.Get(0);
