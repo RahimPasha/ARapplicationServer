@@ -30,24 +30,24 @@ namespace ARApplicationServer
                 Parameter1 = MyQueryString.GetKey(0);
                 if (Parameter1.ToLower() == "file")
                 {
-                    fileName = "Database" + MyQueryString.Get(0).Substring(MyQueryString.Get(0).LastIndexOf('.'));
+                    fileName = MyQueryString.Get(0);
                     fileAddress = Global.TargetsFolder;
                     Downloader.Download(fileName, fileAddress);
                 }
-                else if (Parameter1.ToLower() == "ping")
-                {
-                    HttpContext.Current.Response.ClearContent();
-                    HttpContext.Current.Response.Write(MyQueryString.Get(0));
-                    HttpContext.Current.Response.Flush();
-                }
+                //else if (Parameter1.ToLower() == "ping")
+                //{
+                //    HttpContext.Current.Response.ClearContent();
+                //    HttpContext.Current.Response.Write(MyQueryString.Get(0));
+                //    HttpContext.Current.Response.Flush();
+                //}
                 
-                else if (Parameter1.ToLower() == "shared")
-                {
-                    //fileNmae = MyQueryString.Get(0);
-                    fileAddress = Global.IncomingDatabase;
-                    fileName = Global.SharedDatabaseName + MyQueryString.Get(0).Substring(MyQueryString.Get(0).LastIndexOf('.'));
-                    Downloader.Download(fileName, fileAddress);
-                }
+                //else if (Parameter1.ToLower() == "shared")
+                //{
+                //    //fileNmae = MyQueryString.Get(0);
+                //    fileAddress = Global.TargetsFolder;
+                //    fileName = Global.SharedDatabaseName + MyQueryString.Get(0).Substring(MyQueryString.Get(0).LastIndexOf('.'));
+                //    Downloader.Download(fileName, fileAddress);
+                //}
                 else if (Parameter1.ToLower() == "register")
                 {
                     HttpContext.Current.Response.ClearContent();

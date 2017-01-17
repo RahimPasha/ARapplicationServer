@@ -63,7 +63,8 @@ namespace ARApplicationServer
                     HttpContext.Current.Response.Headers.Add("Error", e.Message);
                 }
             }
-            HttpContext.Current.Response.Headers.Add("file", "Not found");
+            else
+                HttpContext.Current.Response.Headers.Add("file", "Not found");
             HttpContext.Current.Response.Flush();
         }
         public static void upload(string sFileName, string sFilePath, HttpRequest Request)
