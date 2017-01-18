@@ -6,8 +6,8 @@ namespace ARApplicationServer
     {
         public DAL(): base("cnnStr") { }
 
-        public DbSet<Models.Target> Targets { get; set; }
-        public DbSet<Models.Server> Servers { get; set; }
-        public DbSet<Models.Tag> Tags { get; set; }
+        public DbSet<Target> Targets { get; set; }
+        public DbSet<Server> Servers { get; set; }
+        public DbSet<Tag> Tags { get; set; }
     }
 }

@@ -92,6 +92,10 @@
     <Compile Include="Migrations\201701172245399_TagAdded.Designer.cs">
       <DependentUpon>201701172245399_TagAdded.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201701181948362_ConfigEditted.cs" />
+    <Compile Include="Migrations\201701181948362_ConfigEditted.Designer.cs">
+      <DependentUpon>201701181948362_ConfigEditted.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Server.cs" />
     <Compile Include="Models\Tag.cs" />
@@ -142,6 +146,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201701172245399_TagAdded.resx">
       <DependentUpon>201701172245399_TagAdded.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701181948362_ConfigEditted.resx">
+      <DependentUpon>201701181948362_ConfigEditted.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

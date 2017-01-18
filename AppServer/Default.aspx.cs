@@ -34,7 +34,7 @@ namespace ARApplicationServer
                 {
                     fileName = MyQueryString.Get(0);
                     int index = fileName.LastIndexOf('.');
-                    string targetName = fileName.Substring(0, index - 1);
+                    string targetName = fileName.Substring(0, index);
                     Target target;
                     target = db.Targets.Where(t => t.Name == targetName).FirstOrDefault();
                     if (target == null)
@@ -44,9 +44,10 @@ namespace ARApplicationServer
                     }
                     if (target != null) // be careful not to use else if
                     {
-                        fileAddress = (MyQueryString.Get(0).Substring(MyQueryString.Get(0).LastIndexOf('.')) == "dat") ?
+                        string ext = fileName.Substring(index + 1);
+                        fileAddress = (ext == "dat") ?
                             target.DatFilePath : target.XmlFilePath;
-                        Downloader.Download(fileName, fileAddress);
+                        Downloader.Download(fileAddress);
                     }
                 }
                 else if (Parameter1.ToLower() == "register")

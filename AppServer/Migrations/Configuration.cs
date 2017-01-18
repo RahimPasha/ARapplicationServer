@@ -22,8 +22,8 @@ namespace ARApplicationServer.Migrations
             {
                 ID = 1,
                 Name = "database",
-                ChatFilePath = "F:\\Dropbox\\UNBC\\Thesis\\visual studio 2013\\ARapplicationServer\\AppServer\\Targets\\database.dat",
-                DatFilePath = "F:\\Dropbox\\UNBC\\Thesis\\visual studio 2013\\ARapplicationServer\\AppServer\\Targets\\database.xml"
+                DatFilePath = "F:\\Dropbox\\UNBC\\Thesis\\visual studio 2013\\ARapplicationServer\\AppServer\\Targets\\database.dat",
+                XmlFilePath = "F:\\Dropbox\\UNBC\\Thesis\\visual studio 2013\\ARapplicationServer\\AppServer\\Targets\\database.xml"
             });
             context.Servers.AddOrUpdate(new Models.Server { ID = 1, Name = "Servertest" });
             context.Tags.AddOrUpdate(new Models.Tag { ID = 1, TargetID = 1, tag = "chip" });
