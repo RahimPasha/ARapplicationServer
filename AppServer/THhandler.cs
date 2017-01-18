@@ -152,6 +152,7 @@ namespace ARApplicationServer
                 {
                     target.XmlFilePath = Dowfile.FullName;
                 }
+                target.Tags = new List<Tag>();
                 foreach (string s in tags)
                 {
                     target.Tags.Add(new Tag { TargetID = target.ID, tag = s });
