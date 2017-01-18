@@ -33,36 +33,22 @@ namespace ARApplicationServer
                 if (Parameter1.ToLower() == "file")
                 {
                     fileName = MyQueryString.Get(0);
-                    fileAddress = Global.TargetsFolder;
-                    Downloader.Download(fileName, fileAddress);
-                }
-                else if (Parameter1.ToLower() == "th")
-                {
-                    fileName = MyQueryString.Get(0);
                     int index = fileName.LastIndexOf('.');
-                    string targetName = fileName.Substring(0, index-1);
+                    string targetName = fileName.Substring(0, index - 1);
                     Target target;
                     target = db.Targets.Where(t => t.Name == targetName).FirstOrDefault();
-                    if(target == null)
+                    if (target == null)
                     {
                         THhandler.Download(targetName);
                         target = db.Targets.Where(t => t.Name == targetName).FirstOrDefault();
                     }
-                    if (target !=null) // be careful not to use else if
+                    if (target != null) // be careful not to use else if
                     {
                         fileAddress = (MyQueryString.Get(0).Substring(MyQueryString.Get(0).LastIndexOf('.')) == "dat") ?
                             target.DatFilePath : target.XmlFilePath;
                         Downloader.Download(fileName, fileAddress);
                     }
                 }
-
-                //else if (Parameter1.ToLower() == "shared")
-                //{
-                //    //fileNmae = MyQueryString.Get(0);
-                //    fileAddress = Global.TargetsFolder;
-                //    fileName = Global.SharedDatabaseName + MyQueryString.Get(0).Substring(MyQueryString.Get(0).LastIndexOf('.'));
-                //    Downloader.Download(fileName, fileAddress);
-                //}
                 else if (Parameter1.ToLower() == "register")
                 {
                     HttpContext.Current.Response.ClearContent();

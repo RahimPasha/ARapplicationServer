@@ -18,9 +18,17 @@ namespace ARApplicationServer.Migrations
 
             //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
             //  to avoid creating duplicate seed data. E.g.
-            context.Targets.AddOrUpdate(new Models.Target { ID = 1, Name = "targettest" });
+            context.Targets.AddOrUpdate(new Models.Target
+            {
+                ID = 1,
+                Name = "database",
+                ChatFilePath = "F:\\Dropbox\\UNBC\\Thesis\\visual studio 2013\\ARapplicationServer\\AppServer\\Targets\\database.dat",
+                DatFilePath = "F:\\Dropbox\\UNBC\\Thesis\\visual studio 2013\\ARapplicationServer\\AppServer\\Targets\\database.xml"
+            });
             context.Servers.AddOrUpdate(new Models.Server { ID = 1, Name = "Servertest" });
-            //context.Servers.AddOrUpdate(new Models.Tag { ID = 1,  });
+            context.Tags.AddOrUpdate(new Models.Tag { ID = 1, TargetID = 1, tag = "chip" });
+            context.Tags.AddOrUpdate(new Models.Tag { ID = 2, TargetID = 1, tag = "lab" });
+            context.Tags.AddOrUpdate(new Models.Tag { ID = 3, TargetID = 1, tag = "test" });
         }
     }
 }

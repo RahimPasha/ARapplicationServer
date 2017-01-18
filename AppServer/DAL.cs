@@ -8,5 +8,6 @@ namespace ARApplicationServer
 
         public DbSet<Models.Target> Targets { get; set; }
         public DbSet<Models.Server> Servers { get; set; }
+        public DbSet<Models.Tag> Tags { get; set; }
     }
 }
