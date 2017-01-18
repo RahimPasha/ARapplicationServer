@@ -10,11 +10,13 @@ using System.Xml;
 using System.Linq;
 using System.Configuration;
 using System.Web.Configuration;
+using ARApplicationServer.Models;
 
 namespace ARApplicationServer
 {
     public static class THhandler
     {
+       static  DAL db = new DAL();
         public static string Register()
         {
 
@@ -122,6 +124,7 @@ namespace ARApplicationServer
 
         internal static string Download(string targetname)
         {
+            //TODO: Check for the reply message coming from server before changing the database.
             string RegisterationReply = "";
             string DownloadReplyxml = "";
             string DownloadReplydat = "";
@@ -134,16 +137,40 @@ namespace ARApplicationServer
                     Global.TargetHubAddress, Global.Identifier, Global.ServerID, targetname, "xml");
                 client.DownloadFile(uriAdress, Dowfile.FullName);
                 DownloadReplyxml = "OK";
+                List<string> tags = new List<string>();
+                XmlDocument xDoc = new XmlDocument();
+                xDoc.Load(Dowfile.FullName);
+                tags = xDoc.SelectNodes("QCARConfig/Tags/Tag").Cast<XmlNode>().Select(x => x.InnerText).ToList();
+                Target target;
+                target = db.Targets.Where(t => t.Name == targetname).FirstOrDefault();
+                if (target == null)
+                {
+                    target = new Models.Target() { Name = targetname, XmlFilePath = Dowfile.FullName };
+                    db.Targets.Add(target);
+                }
+                else
+                {
+                    target.XmlFilePath = Dowfile.FullName;
+                }
+                foreach (string s in tags)
+                {
+                    target.Tags.Add(new Tag { TargetID = target.ID, tag = s });
+                }
+                db.SaveChanges();
+
                 Dowfile = new System.IO.FileInfo(HttpContext.Current.Server.MapPath(Global.IncomingDatabase + "/" + targetname + ".dat"));
                 uriAdress = string.Format("{0}/Target/Download?Identifier={1}&ID={2}&TargetName={3}&format={4}", Global.TargetHubAddress,
                     Global.Identifier, Global.ServerID, targetname, "dat");
                 client.DownloadFile(uriAdress, Dowfile.FullName);
                 DownloadReplydat = "OK";
+                target.DatFilePath = Dowfile.FullName;
                 //Download Chat File
-                Dowfile = new System.IO.FileInfo(HttpContext.Current.Server.MapPath(Global.ChatFolder + "/" + targetname+"_chat" + ".xml"));
+                Dowfile = new System.IO.FileInfo(HttpContext.Current.Server.MapPath(Global.ChatFolder + "/" + targetname + "_chat" + ".xml"));
                 uriAdress = string.Format("{0}/Target/Download?Identifier={1}&ID={2}&TargetName={3}&format={4}", Global.TargetHubAddress,
                     Global.Identifier, Global.ServerID, targetname, "chat");
                 client.DownloadFile(uriAdress, Dowfile.FullName);
+                target.ChatFilePath = Dowfile.FullName;
+                db.SaveChanges();
             }
 
             return "Registration: " + RegisterationReply + "<br />" + "Download for xml: " + DownloadReplyxml + "<br />" +

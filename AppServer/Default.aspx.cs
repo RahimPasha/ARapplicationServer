@@ -8,6 +8,7 @@ using System.Linq;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using System.Web.Services;
+using ARApplicationServer.Models;
 
 namespace ARApplicationServer
 {
@@ -40,9 +41,12 @@ namespace ARApplicationServer
                     fileName = MyQueryString.Get(0);
                     int index = fileName.LastIndexOf('.');
                     string targetName = fileName.Substring(0, index-1);
-                    if (db.Targets.Where(t => t.Name == targetName).Count() != 0)
+                    Target target;
+                    target = db.Targets.Where(t => t.Name == targetName).FirstOrDefault();
+                    if (target !=null)
                     {
-                        fileAddress = Global.TargetsFolder;
+                        fileAddress = (MyQueryString.Get(0).Substring(MyQueryString.Get(0).LastIndexOf('.')) == "dat") ?
+                            target.DatFilePath : target.XmlFilePath;
                         Downloader.Download(fileName, fileAddress);
                     }
                     else
