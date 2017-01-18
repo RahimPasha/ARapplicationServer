@@ -43,15 +43,16 @@ namespace ARApplicationServer
                     string targetName = fileName.Substring(0, index-1);
                     Target target;
                     target = db.Targets.Where(t => t.Name == targetName).FirstOrDefault();
-                    if (target !=null)
+                    if(target == null)
+                    {
+                        THhandler.Download(targetName);
+                        target = db.Targets.Where(t => t.Name == targetName).FirstOrDefault();
+                    }
+                    if (target !=null) // be careful not to use else if
                     {
                         fileAddress = (MyQueryString.Get(0).Substring(MyQueryString.Get(0).LastIndexOf('.')) == "dat") ?
                             target.DatFilePath : target.XmlFilePath;
                         Downloader.Download(fileName, fileAddress);
-                    }
-                    else
-                    {
-                        THhandler.Download(targetName);
                     }
                 }
 
