@@ -23,6 +23,15 @@ namespace ARApplicationServer
         {
             return true;
         }
+
+        [WebMethod]
+        public static bool CheckPass(string username, string password)
+        {
+            using (DAL db = new DAL())
+            {
+               return db.Users.Where(u => u.Name == username && u.Password == password).Count() == 0 ? false : true;
+            }
+        }
         protected void Page_Load(object sender, EventArgs e)
         {
             HttpRequest q = Request;

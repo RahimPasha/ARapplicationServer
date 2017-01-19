@@ -9,5 +9,6 @@ namespace ARApplicationServer
         public DbSet<Target> Targets { get; set; }
         public DbSet<Server> Servers { get; set; }
         public DbSet<Tag> Tags { get; set; }
+        public DbSet<User> Users { get; set; }
     }
 }

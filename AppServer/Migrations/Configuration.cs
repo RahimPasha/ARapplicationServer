@@ -9,7 +9,7 @@ namespace ARApplicationServer.Migrations
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = false;
+            AutomaticMigrationsEnabled = true;
         }
 
         protected override void Seed(ARApplicationServer.DAL context)
@@ -26,6 +26,7 @@ namespace ARApplicationServer.Migrations
                 XmlFilePath = "F:\\Dropbox\\UNBC\\Thesis\\visual studio 2013\\ARapplicationServer\\AppServer\\Targets\\database.xml"
             });
             context.Servers.AddOrUpdate(new Models.Server { ID = 1, Name = "Servertest" });
+            context.Users.AddOrUpdate(new Models.User { ID = 1, Name = "Rahim", Password = "123" });
             context.Tags.AddOrUpdate(new Models.Tag { ID = 1, TargetID = 1, tag = "chip" });
             context.Tags.AddOrUpdate(new Models.Tag { ID = 2, TargetID = 1, tag = "lab" });
             context.Tags.AddOrUpdate(new Models.Tag { ID = 3, TargetID = 1, tag = "test" });
