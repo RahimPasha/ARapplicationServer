@@ -1,0 +1,11 @@
+<TargetChatFile>
+  <TargetName>chips</TargetName>
+  <MessageNumber>1</MessageNumber>
+  <LastMessage>hi</LastMessage>
+  <Messages>
+    <Message>
+      <User>Rahim</User>
+      <Body>hi</Body>
+    </Message>
+  </Messages>
+</TargetChatFile>

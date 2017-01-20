@@ -135,7 +135,13 @@ namespace ARApplicationServer
                 var Dowfile = new System.IO.FileInfo(HttpContext.Current.Server.MapPath(Global.IncomingDatabase + "/" + targetname + ".xml"));
                 string uriAdress = string.Format("{0}/Target/Download?Identifier={1}&ID={2}&TargetName={3}&format={4}",
                     Global.TargetHubAddress, Global.Identifier, Global.ServerID, targetname, "xml");
-                client.DownloadFile(uriAdress, Dowfile.FullName);
+                try
+                {
+                    client.DownloadFile(uriAdress, Dowfile.FullName);
+                }catch(Exception e)
+                {
+                    return e.Message;
+                }
                 DownloadReplyxml = "OK";
                 List<string> tags = new List<string>();
                 XmlDocument xDoc = new XmlDocument();
@@ -157,20 +163,34 @@ namespace ARApplicationServer
                 {
                     target.Tags.Add(new Tag { TargetID = target.ID, tag = s });
                 }
-                db.SaveChanges();
 
                 Dowfile = new System.IO.FileInfo(HttpContext.Current.Server.MapPath(Global.IncomingDatabase + "/" + targetname + ".dat"));
                 uriAdress = string.Format("{0}/Target/Download?Identifier={1}&ID={2}&TargetName={3}&format={4}", Global.TargetHubAddress,
                     Global.Identifier, Global.ServerID, targetname, "dat");
-                client.DownloadFile(uriAdress, Dowfile.FullName);
+                try
+                {
+                    client.DownloadFile(uriAdress, Dowfile.FullName);
+                }catch(Exception e)
+                {
+                    return e.Message;
+                }
                 DownloadReplydat = "OK";
                 target.DatFilePath = Dowfile.FullName;
+                db.SaveChanges();
                 //Download Chat File
                 Dowfile = new System.IO.FileInfo(HttpContext.Current.Server.MapPath(Global.ChatFolder + "/" + targetname + "_chat" + ".xml"));
                 uriAdress = string.Format("{0}/Target/Download?Identifier={1}&ID={2}&TargetName={3}&format={4}", Global.TargetHubAddress,
                     Global.Identifier, Global.ServerID, targetname, "chat");
-                client.DownloadFile(uriAdress, Dowfile.FullName);
-                target.ChatFilePath = Dowfile.FullName;
+                try
+                {
+                    client.DownloadFile(uriAdress, Dowfile.FullName);
+                    target.ChatFilePath = Dowfile.FullName;
+                }
+                catch(Exception e)
+                {
+                    target.ChatFilePath = "";
+                }
+                
                 db.SaveChanges();
             }
 

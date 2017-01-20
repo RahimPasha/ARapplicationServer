@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<QCARConfig xsi:noNamespaceSchemaLocation="qcar_config.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <Tracking>
+        <ImageTarget name="tarmac" size="30.000000 21.000000"/>
+    </Tracking>
+	  <Tags>
+        <Tag>tarmac</Tag>
+        <Tag>lab</Tag>
+        <Tag>test</Tag>
+  </Tags>
+</QCARConfig>
