@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Web;
 using System.Collections.Specialized;
-using System.Xml;
 using ARApplicationServer.App_Code;
-using System.Configuration;
 using System.Linq;
-using System.Collections.Generic;
 using Newtonsoft.Json;
 using System.Web.Services;
 using ARApplicationServer.Models;
