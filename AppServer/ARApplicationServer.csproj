@@ -100,10 +100,6 @@
     <Compile Include="Migrations\201701192126599_UserAdded.Designer.cs">
       <DependentUpon>201701192126599_UserAdded.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201701192149558_UserAdded1.cs" />
-    <Compile Include="Migrations\201701192149558_UserAdded1.Designer.cs">
-      <DependentUpon>201701192149558_UserAdded1.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Server.cs" />
     <Compile Include="Models\Tag.cs" />
@@ -160,9 +156,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201701192126599_UserAdded.resx">
       <DependentUpon>201701192126599_UserAdded.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201701192149558_UserAdded1.resx">
-      <DependentUpon>201701192149558_UserAdded1.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
