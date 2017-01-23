@@ -84,6 +84,11 @@
     <Compile Include="DAL.cs" />
     <Compile Include="Downloader.cs" />
     <Compile Include="Messaging.cs" />
+    <Compile Include="Migrations\201701232341132_initial.cs" />
+    <Compile Include="Migrations\201701232341132_initial.Designer.cs">
+      <DependentUpon>201701232341132_initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Server.cs" />
     <Compile Include="Models\Tag.cs" />
     <Compile Include="Models\Target.cs" />
@@ -126,6 +131,11 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201701232341132_initial.resx">
+      <DependentUpon>201701232341132_initial.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
