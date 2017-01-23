@@ -19,6 +19,7 @@ namespace ARApplicationServer
        static  DAL db = new DAL();
         public static string Register()
         {
+            Global.Refresh();
 
             string Response = "";
             int ID = -1;
@@ -36,16 +37,9 @@ namespace ARApplicationServer
             }
             if (ID > 0)
             {
-                Configuration config = WebConfigurationManager.OpenWebConfiguration(HttpContext.Current.Request.ApplicationPath);
-                AppSettingsSection appSettings = (AppSettingsSection)config.GetSection("appSettings");
-                if (appSettings != null)
-                {
-                    appSettings.Settings["Registered"].Value = "True";
-                    appSettings.Settings["ID"].Value = ID.ToString();
-                    config.Save();
-                }
-                Global.Registered = "True";
-                Global.ServerID = ID.ToString(); ;
+                Global.MyServer.Registered = "True";
+                Global.MyServer.ID = ID;
+                Global.Refresh();
                 return "Registration was successful" + "<br />";
             }
 

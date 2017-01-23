@@ -20,7 +20,7 @@ namespace ARApplicationServer
         {
             return true;
         }
-
+        
         [WebMethod]
         public static bool CheckPass(string username, string password)
         {
@@ -29,6 +29,56 @@ namespace ARApplicationServer
                return db.Users.Where(u => u.Name == username && u.Password == password).Count() == 0 ? false : true;
             }
         }
+
+        [WebMethod]
+        public static bool AddTarget(string username, string password, string TargetName)
+        {
+            try
+            {
+                using (DAL db = new DAL())
+                {
+                    if (db.Users.Where(u => u.Name == username && u.Password == password).Count() != 0)
+                    {
+                        Target newT = new Models.Target()
+                        {
+                            Name = TargetName,
+                            DatFilePath = HttpContext.Current.Server.MapPath("~") + "/" + Global.MyServer.TargetsFolder + TargetName + ".dat",
+                            XmlFilePath = HttpContext.Current.Server.MapPath("~") + "/" + Global.MyServer.TargetsFolder + TargetName + ".xml",
+                        };
+                        if (db.Targets.Where(t => t.Name == TargetName).Count() == 0)
+                        {
+                            db.Targets.Add(newT);
+                            db.SaveChanges();
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        [WebMethod]
+        public static bool AddRootFolder(string username, string password)
+        {
+            try
+            {
+                using (DAL db = new DAL())
+                {
+                    db.ServerInfo.Where(s => s.ID == Global.ActiveServerInfo).FirstOrDefault().RootFolder =
+                        HttpContext.Current.Server.MapPath("~");
+                    return true;
+                }
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         protected void Page_Load(object sender, EventArgs e)
         {
             HttpRequest q = Request;
@@ -77,6 +127,7 @@ namespace ARApplicationServer
                     HttpContext.Current.Response.Flush();
                     //HttpContext.Current.Response.Close();
                 }
+
                 else if (Parameter1.ToLower() == "get")
                 {
                     HttpContext.Current.Response.ClearContent();
