@@ -135,47 +135,50 @@ namespace ARApplicationServer
                 var Dowfile = new System.IO.FileInfo(HttpContext.Current.Server.MapPath(Global.IncomingDatabase + "/" + targetname + ".xml"));
                 string uriAdress = string.Format("{0}/Target/Download?Identifier={1}&ID={2}&TargetName={3}&format={4}",
                     Global.TargetHubAddress, Global.Identifier, Global.ServerID, targetname, "xml");
+                Target target;
                 try
                 {
                     client.DownloadFile(uriAdress, Dowfile.FullName);
-                }catch(Exception e)
+                    DownloadReplyxml = "OK";
+                    List<string> tags = new List<string>();
+                    XmlDocument xDoc = new XmlDocument();
+                    xDoc.Load(Dowfile.FullName);
+                    tags = xDoc.SelectNodes("QCARConfig/Tags/Tag").Cast<XmlNode>().Select(x => x.InnerText).ToList();
+                    target = db.Targets.Where(t => t.Name == targetname).FirstOrDefault();
+                    if (target == null)
+                    {
+                        target = new Models.Target() { Name = targetname, XmlFilePath = Dowfile.FullName };
+                        db.Targets.Add(target);
+                    }
+                    else
+                    {
+                        target.XmlFilePath = Dowfile.FullName;
+                    }
+                    target.Tags = new List<Tag>();
+                    foreach (string s in tags)
+                    {
+                        target.Tags.Add(new Tag { TargetID = target.ID, tag = s });
+                    }
+                }
+                catch(Exception e)
                 {
                     return e.Message;
                 }
-                DownloadReplyxml = "OK";
-                List<string> tags = new List<string>();
-                XmlDocument xDoc = new XmlDocument();
-                xDoc.Load(Dowfile.FullName);
-                tags = xDoc.SelectNodes("QCARConfig/Tags/Tag").Cast<XmlNode>().Select(x => x.InnerText).ToList();
-                Target target;
-                target = db.Targets.Where(t => t.Name == targetname).FirstOrDefault();
-                if (target == null)
-                {
-                    target = new Models.Target() { Name = targetname, XmlFilePath = Dowfile.FullName };
-                    db.Targets.Add(target);
-                }
-                else
-                {
-                    target.XmlFilePath = Dowfile.FullName;
-                }
-                target.Tags = new List<Tag>();
-                foreach (string s in tags)
-                {
-                    target.Tags.Add(new Tag { TargetID = target.ID, tag = s });
-                }
-
+                
                 Dowfile = new System.IO.FileInfo(HttpContext.Current.Server.MapPath(Global.IncomingDatabase + "/" + targetname + ".dat"));
                 uriAdress = string.Format("{0}/Target/Download?Identifier={1}&ID={2}&TargetName={3}&format={4}", Global.TargetHubAddress,
                     Global.Identifier, Global.ServerID, targetname, "dat");
                 try
                 {
                     client.DownloadFile(uriAdress, Dowfile.FullName);
-                }catch(Exception e)
+                    DownloadReplydat = "OK";
+                    target.DatFilePath = Dowfile.FullName;
+                }
+                catch(Exception e)
                 {
                     return e.Message;
                 }
-                DownloadReplydat = "OK";
-                target.DatFilePath = Dowfile.FullName;
+
                 db.SaveChanges();
                 //Download Chat File
                 Dowfile = new System.IO.FileInfo(HttpContext.Current.Server.MapPath(Global.ChatFolder + "/" + targetname + "_chat" + ".xml"));

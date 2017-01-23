@@ -157,29 +157,36 @@ namespace ARApplicationServer
         }
         public void ChatRequest()
         {
-            if (!Dfile.Exists)
+            try
             {
-                CreateChatFile(FileAddress, targetName);
-            }
-            else
-            {
-                XmlDocument xDoc = new XmlDocument(); // reading XML documents
-                xDoc.Load(Dfile.FullName);
-                XmlNode NumberOfMessages = xDoc.SelectSingleNode("/TargetChatFile/MessageNumber");
-                fileSize = double.Parse(NumberOfMessages.InnerText);
-                lastMessage = xDoc.SelectSingleNode("/TargetChatFile/LastMessage").InnerText;
-            }
+                if (!Dfile.Exists)
+                {
+                    CreateChatFile(FileAddress, targetName);
+                }
+                else
+                {
+                    XmlDocument xDoc = new XmlDocument(); // reading XML documents
+                    xDoc.Load(Dfile.FullName);
+                    XmlNode NumberOfMessages = xDoc.SelectSingleNode("/TargetChatFile/MessageNumber");
+                    fileSize = double.Parse(NumberOfMessages.InnerText);
+                    lastMessage = xDoc.SelectSingleNode("/TargetChatFile/LastMessage").InnerText;
+                }
 
-            if(fileSize == clientFileSize && lastMessage == clientLastMessage)
-            {
-                //start long polling and wait 60 secs then close connection
-                //probably we need to implement an event which triggers if the chat file size changes
-                LongPolling(this);
+                if (fileSize == clientFileSize && lastMessage == clientLastMessage)
+                {
+                    //start long polling and wait 60 secs then close connection
+                    //probably we need to implement an event which triggers if the chat file size changes
+                    LongPolling(this);
+                }
+                else
+                {
+                    //Reply the chat file and close the connection
+                    Downloader.Download(Dfile); //connection will be automatically closed after the http request is processed.
+                }
             }
-            else
+            catch(Exception e)
             {
-                //Reply the chat file and close the connection
-                Downloader.Download(Dfile); //connection will be automatically closed after the http request is processed.
+                return;
             }
         }
 

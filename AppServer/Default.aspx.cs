@@ -43,12 +43,12 @@ namespace ARApplicationServer
                     string targetName = fileName.Substring(0, index);
                     Target target;
                     target = db.Targets.Where(t => t.Name == targetName).FirstOrDefault();
-                    if (target == null)
+                    if (target == null || target.DatFilePath == null || target.XmlFilePath == null)
                     {
                         THhandler.Download(targetName);
                         target = db.Targets.Where(t => t.Name == targetName).FirstOrDefault();
                     }
-                    if (target != null) // be careful not to use else if
+                    if (target != null && target.DatFilePath != null && target.XmlFilePath != null) // be careful not to use else if
                     {
                         string ext = fileName.Substring(index + 1);
                         fileAddress = (ext == "dat") ?
@@ -98,6 +98,7 @@ namespace ARApplicationServer
                     //fileNmae = MyQueryString.Get(0);
                     fileAddress = Global.ChatFolder;
                     string targetName = MyQueryString.Get(0);
+
                     if (MyQueryString.GetKey(1) == "lastMessage")
                     {
                         string temp = MyQueryString.Get("lastMessage");

@@ -14,7 +14,7 @@ namespace ARApplicationServer
     {
         public static void Download(string sFileName)
         {
-            Downloader.Download(new System.IO.FileInfo(sFileName));
+            Download(new System.IO.FileInfo(sFileName));
         }
         public static void Download(string sFileName, string sFilePath)
         {

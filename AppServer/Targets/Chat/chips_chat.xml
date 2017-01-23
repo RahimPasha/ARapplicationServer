@@ -1,11 +1,23 @@
 <TargetChatFile>
   <TargetName>chips</TargetName>
-  <MessageNumber>1</MessageNumber>
-  <LastMessage>hi</LastMessage>
+  <MessageNumber>4</MessageNumber>
+  <LastMessage>dhdhd</LastMessage>
   <Messages>
     <Message>
       <User>Rahim</User>
       <Body>hi</Body>
+    </Message>
+    <Message>
+      <User>rahim</User>
+      <Body>hi2</Body>
+    </Message>
+    <Message>
+      <User>rahim</User>
+      <Body>xcgdg</Body>
+    </Message>
+    <Message>
+      <User>rahim</User>
+      <Body>dhdhd</Body>
     </Message>
   </Messages>
 </TargetChatFile>
