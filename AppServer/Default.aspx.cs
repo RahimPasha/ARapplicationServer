@@ -42,9 +42,9 @@ namespace ARApplicationServer
                         Target newT = new Models.Target()
                         {
                             Name = TargetName,
-                            DatFilePath = HttpContext.Current.Server.MapPath("~") + "\\" + Global.MyServer.TargetsFolder +
+                            DatFilePath = HttpContext.Current.Server.MapPath("~") + Global.MyServer.TargetsFolder +
                             "\\" + TargetName + ".dat",
-                            XmlFilePath = HttpContext.Current.Server.MapPath("~") + "\\" + Global.MyServer.TargetsFolder +
+                            XmlFilePath = HttpContext.Current.Server.MapPath("~") + Global.MyServer.TargetsFolder +
                             "\\" + TargetName + ".xml",
                         };
                         if (db.Targets.Where(t => t.Name == TargetName).Count() == 0)
