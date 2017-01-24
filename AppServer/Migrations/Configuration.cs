@@ -21,7 +21,7 @@ namespace ARApplicationServer.Migrations
                 DatFilePath = "F:\\Dropbox\\UNBC\\Thesis\\visual studio 2013\\ARapplicationServer\\AppServer\\Targets\\database.dat",
                 XmlFilePath = "F:\\Dropbox\\UNBC\\Thesis\\visual studio 2013\\ARapplicationServer\\AppServer\\Targets\\database.xml"
             });
-            context.ServerInfo.AddOrUpdate(new Models.Server
+            context.Servers.AddOrUpdate(new Models.Server
             {
                 ID = 1,
                 Name = "ServerA",

@@ -42,8 +42,10 @@ namespace ARApplicationServer
                         Target newT = new Models.Target()
                         {
                             Name = TargetName,
-                            DatFilePath = HttpContext.Current.Server.MapPath("~") + "/" + Global.MyServer.TargetsFolder + TargetName + ".dat",
-                            XmlFilePath = HttpContext.Current.Server.MapPath("~") + "/" + Global.MyServer.TargetsFolder + TargetName + ".xml",
+                            DatFilePath = HttpContext.Current.Server.MapPath("~") + "\\" + Global.MyServer.TargetsFolder +
+                            "\\" + TargetName + ".dat",
+                            XmlFilePath = HttpContext.Current.Server.MapPath("~") + "\\" + Global.MyServer.TargetsFolder +
+                            "\\" + TargetName + ".xml",
                         };
                         if (db.Targets.Where(t => t.Name == TargetName).Count() == 0)
                         {
@@ -62,20 +64,23 @@ namespace ARApplicationServer
         }
 
         [WebMethod]
-        public static bool AddRootFolder(string username, string password)
+        public static string AddRootFolder(string username, string password)
         {
             try
             {
                 using (DAL db = new DAL())
                 {
-                    db.ServerInfo.Where(s => s.ID == Global.ActiveServerInfo).FirstOrDefault().RootFolder =
+                    Server ss = db.Servers.Where(s => s.ID == 1).FirstOrDefault();
+                    int x = Global.ActiveServerInfo;
+                    db.Servers.Where(s => s.ID == Global.ActiveServerInfo).FirstOrDefault().RootFolder =
                         HttpContext.Current.Server.MapPath("~");
-                    return true;
+                    db.SaveChanges();
+                    return "Root Folder Added";
                 }
             }
-            catch
+            catch(Exception e)
             {
-                return false;
+                return e.Message;
             }
         }
 
