@@ -40,6 +40,8 @@ namespace ARApplicationServer
                 Global.MyServer.Registered = "True";
                 Global.MyServer.HubID = ID;
                 Global.Refresh();
+                db.Servers.FirstOrDefault().Registered = "true";
+                db.Servers.FirstOrDefault().HubID = ID;
                 db.SaveChanges();
                 return "Registration was successful" + "<br />";
             }
