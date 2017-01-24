@@ -24,6 +24,7 @@ namespace ARApplicationServer.Migrations
             context.Servers.AddOrUpdate(new Models.Server
             {
                 ID = 1,
+                HubID = -1,
                 Name = "ServerA",
                 Address = "http://localhost:7204",
                 ChatFolder = "Targets/Chat",

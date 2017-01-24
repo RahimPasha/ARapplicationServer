@@ -16,18 +16,18 @@ namespace ARApplicationServer.App_Code
                 MyServer = db.Servers.Where(s => s.ID == ActiveServerInfo).FirstOrDefault();
                 TargetHubAddress = MyServer.HubAddress;
                 ServerName = MyServer.Name;
-                Identifier = MyServer.Name;
-                ServerID = MyServer.Name;
-                Registered = MyServer.Name;
-                TargetsFolder = MyServer.Name;
-                OutgoingTargetName = MyServer.Name;
-                IncomingDatabase = MyServer.Name;
-                OutgoingDatabase = MyServer.Name;
-                ChatFolder = MyServer.Name;
-                ServerAddress = MyServer.Name;
+                Identifier = MyServer.Identifier;
+                HubID = MyServer.HubID.ToString();
+                Registered = MyServer.Registered;
+                TargetsFolder = MyServer.TargetsFolder;
+                OutgoingTargetName = MyServer.OutgoingFolder;
+                IncomingDatabase = MyServer.IncomingFolder;
+                OutgoingDatabase = MyServer.OutgoingFolder;
+                ChatFolder = MyServer.ChatFolder;
+                ServerAddress = MyServer.Address;
             }
         }
-        public static string ServerID;
+        public static string HubID;
         public static string Registered;
         public static string TargetsFolder;
         public static string OutgoingTargetName;
@@ -49,15 +49,15 @@ namespace ARApplicationServer.App_Code
                 MyServer = db.Servers.Where(s => s.ID == ActiveServerInfo).FirstOrDefault();
                 TargetHubAddress = MyServer.HubAddress;
                 ServerName = MyServer.Name;
-                Identifier = MyServer.Name;
-                ServerID = MyServer.Name;
-                Registered = MyServer.Name;
-                TargetsFolder = MyServer.Name;
-                OutgoingTargetName = MyServer.Name;
-                IncomingDatabase = MyServer.Name;
-                OutgoingDatabase = MyServer.Name;
-                ChatFolder = MyServer.Name;
-                ServerAddress = MyServer.Name;
+                Identifier = MyServer.Identifier;
+                HubID = MyServer.HubID.ToString();
+                Registered = MyServer.Registered;
+                TargetsFolder = MyServer.TargetsFolder;
+                OutgoingTargetName = MyServer.OutgoingFolder;
+                IncomingDatabase = MyServer.IncomingFolder;
+                OutgoingDatabase = MyServer.OutgoingFolder;
+                ChatFolder = MyServer.ChatFolder;
+                ServerAddress = MyServer.Address;
             }
         }
             

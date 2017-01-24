@@ -88,6 +88,10 @@
     <Compile Include="Migrations\201701232341132_initial.Designer.cs">
       <DependentUpon>201701232341132_initial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201701240301234_HubIDadded.cs" />
+    <Compile Include="Migrations\201701240301234_HubIDadded.Designer.cs">
+      <DependentUpon>201701240301234_HubIDadded.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Server.cs" />
     <Compile Include="Models\Tag.cs" />
@@ -135,6 +139,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201701232341132_initial.resx">
       <DependentUpon>201701232341132_initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701240301234_HubIDadded.resx">
+      <DependentUpon>201701240301234_HubIDadded.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

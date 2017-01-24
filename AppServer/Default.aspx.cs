@@ -39,7 +39,7 @@ namespace ARApplicationServer
                 {
                     if (db.Users.Where(u => u.Name == username && u.Password == password).Count() != 0)
                     {
-                        Target newT = new Models.Target()
+                        Target newT = new Target()
                         {
                             Name = TargetName,
                             DatFilePath = HttpContext.Current.Server.MapPath("~") + Global.MyServer.TargetsFolder +
@@ -70,8 +70,6 @@ namespace ARApplicationServer
             {
                 using (DAL db = new DAL())
                 {
-                    Server ss = db.Servers.Where(s => s.ID == 1).FirstOrDefault();
-                    int x = Global.ActiveServerInfo;
                     db.Servers.Where(s => s.ID == Global.ActiveServerInfo).FirstOrDefault().RootFolder =
                         HttpContext.Current.Server.MapPath("~");
                     db.SaveChanges();

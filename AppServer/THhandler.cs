@@ -38,8 +38,9 @@ namespace ARApplicationServer
             if (ID > 0)
             {
                 Global.MyServer.Registered = "True";
-                Global.MyServer.ID = ID;
+                Global.MyServer.HubID = ID;
                 Global.Refresh();
+                db.SaveChanges();
                 return "Registration was successful" + "<br />";
             }
 
@@ -62,7 +63,7 @@ namespace ARApplicationServer
             {
                 string uriAdress = string.Format(Global.TargetHubAddress +
                     "/Target/Upload?Identifier={0}&ID={1}&TargetName={2}",
-                    Global.Identifier, Global.ServerID, Global.OutgoingTargetName);
+                    Global.Identifier, Global.HubID, Global.OutgoingTargetName);
 
                 foreach (string s in tags)
                     uriAdress += "&Tags[]=" + s;
@@ -72,7 +73,7 @@ namespace ARApplicationServer
             using (WebClient client = new WebClient())
             {
                 string uriAdress = string.Format("{0}/Target/Upload?Identifier={1}&ID={2}&TargetName={3}", Global.TargetHubAddress,
-                    Global.Identifier, Global.ServerID, Global.OutgoingTargetName);
+                    Global.Identifier, Global.HubID, Global.OutgoingTargetName);
 
                 foreach (string s in tags)
                     uriAdress += "&Tags[]=" + s;
@@ -84,7 +85,7 @@ namespace ARApplicationServer
             using (WebClient client = new WebClient())
             {
                 string uriAdress = string.Format("{0}/Target/Upload?Identifier={1}&ID={2}&TargetName={3}", Global.TargetHubAddress,
-                    Global.Identifier, Global.ServerID, Global.OutgoingTargetName);
+                    Global.Identifier, Global.HubID, Global.OutgoingTargetName);
                 foreach (string s in tags)
                     uriAdress += "&Tags[]=" + s;
 
@@ -128,7 +129,7 @@ namespace ARApplicationServer
                 //client.QueryString.Add("file")
                 var Dowfile = new System.IO.FileInfo(HttpContext.Current.Server.MapPath(Global.IncomingDatabase + "/" + targetname + ".xml"));
                 string uriAdress = string.Format("{0}/Target/Download?Identifier={1}&ID={2}&TargetName={3}&format={4}",
-                    Global.TargetHubAddress, Global.Identifier, Global.ServerID, targetname, "xml");
+                    Global.TargetHubAddress, Global.Identifier, Global.HubID, targetname, "xml");
                 Target target;
                 try
                 {
@@ -161,7 +162,7 @@ namespace ARApplicationServer
                 
                 Dowfile = new System.IO.FileInfo(HttpContext.Current.Server.MapPath(Global.IncomingDatabase + "/" + targetname + ".dat"));
                 uriAdress = string.Format("{0}/Target/Download?Identifier={1}&ID={2}&TargetName={3}&format={4}", Global.TargetHubAddress,
-                    Global.Identifier, Global.ServerID, targetname, "dat");
+                    Global.Identifier, Global.HubID, targetname, "dat");
                 try
                 {
                     client.DownloadFile(uriAdress, Dowfile.FullName);
@@ -177,7 +178,7 @@ namespace ARApplicationServer
                 //Download Chat File
                 Dowfile = new System.IO.FileInfo(HttpContext.Current.Server.MapPath(Global.ChatFolder + "/" + targetname + "_chat" + ".xml"));
                 uriAdress = string.Format("{0}/Target/Download?Identifier={1}&ID={2}&TargetName={3}&format={4}", Global.TargetHubAddress,
-                    Global.Identifier, Global.ServerID, targetname, "chat");
+                    Global.Identifier, Global.HubID, targetname, "chat");
                 try
                 {
                     client.DownloadFile(uriAdress, Dowfile.FullName);
@@ -201,7 +202,7 @@ namespace ARApplicationServer
             using (WebClient client = new WebClient())
             {
                 string uriAdress = string.Format(Global.TargetHubAddress + "/Target/GetTargets?Identifier={0}&ID={1}",
-                    Global.Identifier,Global.ServerID);
+                    Global.Identifier,Global.HubID);
                 foreach (string s in tags )
                     uriAdress += "&Tags[]=" + s;
                 var res = JsonConvert.DeserializeObject<List<string>>(Encoding.Default.GetString(client.DownloadData(uriAdress)));
@@ -216,7 +217,7 @@ namespace ARApplicationServer
             {
                 string uriAdress = string.Format(Global.TargetHubAddress +
                     "/Target/ForwardMessage?Identifier={0}&ID={1}&TargetName={2}&UserName={3}&SentMessage={4}",
-                    Global.Identifier, Global.ServerID, TargetName, User, SentMessage);
+                    Global.Identifier, Global.HubID, TargetName, User, SentMessage);
                 client.DownloadData(uriAdress);
             }
         }

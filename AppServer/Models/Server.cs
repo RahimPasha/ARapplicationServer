@@ -8,6 +8,7 @@ namespace ARApplicationServer.Models
     public class Server
     {
         public int ID { get; set; }
+        public int HubID { get; set; }
         public string Identifier { get; set; }
         public string Name { get; set; }
         public string Address { get; set; }
