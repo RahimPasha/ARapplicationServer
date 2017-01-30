@@ -12,21 +12,6 @@ namespace ARApplicationServer.App_Code
             
             ActiveServerInfo = 1;
             Refresh();
-            /*using (DAL db = new DAL())
-            {
-                MyServer = db.Servers.Where(s => s.ID == ActiveServerInfo).FirstOrDefault();
-                TargetHubAddress = MyServer.HubAddress;
-                ServerName = MyServer.Name;
-                Identifier = MyServer.Identifier;
-                HubID = MyServer.HubID.ToString();
-                Registered = MyServer.Registered;
-                TargetsFolder = MyServer.TargetsFolder;
-                OutgoingTargetName = MyServer.OutgoingFolder;
-                IncomingDatabase = MyServer.IncomingFolder;
-                OutgoingDatabase = MyServer.OutgoingTargetName;
-                ChatFolder = MyServer.ChatFolder;
-                ServerAddress = MyServer.Address;
-            }*/
         }
         public static string HubID;
         public static string Registered;
