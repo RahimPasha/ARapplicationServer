@@ -15,12 +15,22 @@ namespace ARApplicationServer
         string fileAddress = "";
         string Parameter1;
         string fileName;
+        /// <summary>
+        /// This method is for pinging the server. It returns true if server is reachable.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         [WebMethod]
         public static bool Ping(string value)
         {
             return true;
         }
-        
+        /// <summary>
+        /// This method is used for authentication. It returns true if there is any account with specified user name and password. 
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
         [WebMethod]
         public static bool CheckPass(string username, string password)
         {
